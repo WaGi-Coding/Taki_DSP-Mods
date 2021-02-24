@@ -1,9 +1,0 @@
-{
-  "name": "FreeFoundations_FreeSoil_HigherBuildRange",
-  "version_number": "1.1.9",
-  "website_url": "",
-  "description": "No need to have Foundations(optional) or Soil(optional) to build Foundations at all. Also increases the Build-Range(optional) & Reformsize increases from 10x10 to 30x30. 30x30 Reform-Size is incompatible with BuildAnywhere Mod and get's locked to 10x10!",
-  "dependencies": [
-    "xiaoye97-BepInEx-5.4.5"
-  ]
-}

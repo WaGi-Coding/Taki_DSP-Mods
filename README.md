@@ -1,2 +1,2 @@
-# Taki_DSP-Mods
+# Taki DSP Mods
 ### Just some Mods for the Game Dyson Sphere Program

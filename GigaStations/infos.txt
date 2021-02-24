@@ -1,0 +1,28 @@
+lvl 0	+d:  0	+v:   0	= d:  25 v:  200
+lvl 1	+d:  5	+v:   0	= d:  30 v:  200
+lvl 2	+d:  5	+v:   0	= d:  35 v:  200
+lvl 3	+d:  5	+v: 100	= d:  40 v:  300
+lvl 4	+d: 10	+v: 100 = d:  50 v:  400
+lvl 5	+d: 10	+v: 100 = d:  60 v:  500
+lvl 6	+d: 10	+v: 100 = d:  70 v:  600
+lvl 7	+d: 10	+v: 200 = d:  80 v:  800
+lvl 8	+d: 20	+v: 200 = d: 100 v: 1000
+
+
+pls
+add 1 normal pls to giga
+63:1103:40 steel
+65:1106:40 Titanium Ingot
+51:1303:40 Processor
+99:1206:20 particle container
+
+ils
+93:2103:1  pls replace with 1 giga pls for giga ils
+66:1107:40 titanium alloy
+99:1206:20 particle container
+
+collector
+95:2104:1   ils replace with 1 giga ils for giga collector
+103:1205:50 Super Magnetig Ring
+21:1406:20 Reinforced Thruster
+X:2207:20 Accu Full

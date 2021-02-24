@@ -55,10 +55,10 @@ namespace GigaStations
 
 
         //VesselCapacity
-        public static int vesselCapacityMultiplier { get; set; } = 3; //Vanilla depends on upgrade-lvl, but max is 1000 (limit to 5000?)
+        public static int vesselCapacityMultiplier { get; set; } = 3; //Vanilla 1
 
         //DroneCapacity
-        public static int droneCapacityMultiplier { get; set; } = 3; //Vanilla depends on upgrade-lvl, but max is 100 (limit to 500?)
+        public static int droneCapacityMultiplier { get; set; } = 3; //Vanilla 1
 
 
 

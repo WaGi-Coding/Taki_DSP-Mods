@@ -139,7 +139,7 @@ namespace GigaStations
             Giga_PLS.name = "Planetary Giga Station";
             Giga_PLS.Description = "Has more Slots, Capacity, etc. than a usual PLS.";
             Giga_PLS.description = "Has more Slots, Capacity, etc. than a usual PLS.";
-            Giga_PLS.BuildIndex = 410;
+            Giga_PLS.BuildIndex = 604;
             Giga_PLS.GridIndex = RecipeGiga_PLS.GridIndex;
             Giga_PLS.handcraft = RecipeGiga_PLS;
             Giga_PLS.maincraft = RecipeGiga_PLS;
@@ -197,7 +197,7 @@ namespace GigaStations
             Giga_ILS.name = "Interstellar Giga Station";
             Giga_ILS.Description = "Has more Slots, Capacity, etc. than a usual ILS.";
             Giga_ILS.description = "Has more Slots, Capacity, etc. than a usual ILS.";
-            Giga_ILS.BuildIndex = 411;
+            Giga_ILS.BuildIndex = 605;
             Giga_ILS.GridIndex = RecipeGiga_ILS.GridIndex;
             Giga_ILS.handcraft = RecipeGiga_ILS;
             Giga_ILS.maincraft = RecipeGiga_ILS;
@@ -254,7 +254,7 @@ namespace GigaStations
             Giga_Collector.name = "Orbital Giga Collector";
             Giga_Collector.Description = $"Has more Capacity and collects {GigaStationsPlugin.colSpeedMultiplier}x faster than a usual Collector.";
             Giga_Collector.description = $"Has more Capacity and collects {GigaStationsPlugin.colSpeedMultiplier}x faster than a usual Collector.";
-            Giga_Collector.BuildIndex = 412;
+            Giga_Collector.BuildIndex = 606;
             Giga_Collector.GridIndex = RecipeGiga_Collector.GridIndex;
             Giga_Collector.handcraft = RecipeGiga_Collector;
             Giga_Collector.maincraft = RecipeGiga_Collector;

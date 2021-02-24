@@ -29,7 +29,7 @@ namespace GigaStations
 
         public const string ModGuid = "com.Taki7o7.GigaStations_v2";
         public const string ModName = "GigaStations_v2";
-        public const string ModVer = "2.0.2";
+        public const string ModVer = "2.0.4";
 
 
 
@@ -147,6 +147,8 @@ namespace GigaStations
             Giga_PLS.recipes = new List<RecipeProto> { RecipeGiga_PLS };
             Giga_PLS.makes = new List<RecipeProto>();
             Giga_PLS.prefabDesc = oriItem.prefabDesc.Copy();
+            
+            Giga_PLS.prefabDesc.workEnergyPerTick = 3333334;
             Giga_PLS.prefabDesc.modelIndex = Giga_PLS.ModelIndex;
             Giga_PLS.prefabDesc.stationMaxItemCount = GigaStationsPlugin.plsMaxStorage;
             Giga_PLS.prefabDesc.stationMaxItemKinds = GigaStationsPlugin.plsMaxSlots;
@@ -182,8 +184,6 @@ namespace GigaStations
             RecipeGiga_ILS.description = "Has more Slots, Capacity, etc. than a usual ILS.";
             RecipeGiga_ILS.Items = new int[] { 2110, 1107, 1206 }; //giga ils, titAlloy, partCont
             RecipeGiga_ILS.ItemCounts = new int[] { 1, 40, 20 };
-            //RecipeGiga_ILS.Items.AddRangeToArray(new int[] { 2206, 6005 }); //accu, gravity matrix
-            //RecipeGiga_ILS.ItemCounts.AddRangeToArray(new int[] { 5, 10 });
             RecipeGiga_ILS.Results = new int[] { 2111 };
             RecipeGiga_ILS.ResultCounts = new int[] { 1 };
             RecipeGiga_ILS.GridIndex = 2702;
@@ -205,6 +205,7 @@ namespace GigaStations
             Giga_ILS.recipes = new List<RecipeProto> { RecipeGiga_ILS };
             Giga_ILS.makes = new List<RecipeProto>();
             Giga_ILS.prefabDesc = oriItem.prefabDesc.Copy();
+            Giga_ILS.prefabDesc.workEnergyPerTick = 3333334;
             Giga_ILS.prefabDesc.modelIndex = Giga_ILS.ModelIndex;
             Giga_ILS.prefabDesc.stationMaxItemCount = GigaStationsPlugin.ilsMaxStorage;
             Giga_ILS.prefabDesc.stationMaxItemKinds = GigaStationsPlugin.ilsMaxSlots;
@@ -212,7 +213,6 @@ namespace GigaStations
             Giga_ILS.prefabDesc.stationMaxShipCount = GigaStationsPlugin.ilsMaxVessels;
             Giga_ILS.prefabDesc.stationMaxEnergyAcc = Convert.ToInt64(GigaStationsPlugin.ilsMaxAcuGJ * 1000000000);
             // Set MaxWarpers in station init!!!!!
-
 
 
 
@@ -270,7 +270,6 @@ namespace GigaStations
 
 
 
-
             Traverse.Create(RecipeGiga_Collector).Field("_iconSprite").SetValue(icon_collector);
             Traverse.Create(Giga_Collector).Field("_iconSprite").SetValue(icon_collector);
 
@@ -287,7 +286,6 @@ namespace GigaStations
 
             harmony.PatchAll(typeof(GigaStationsPlugin));
             harmony.PatchAll(typeof(StationEditPatch));
-            //logger.LogInfo("GigaStations Awake!");
         }
     }
 
@@ -478,33 +476,34 @@ namespace GigaStations
             }
         }
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(PlanetTransport), "NewStationComponent")] // maybe swap with normal VFPreload if not supporting modded tesla towers? or later preloadpostpatch LDBTool one again if already done
-        public static void NewStationComponentPostfix(PlanetTransport __instance, ref int _entityId, ref int _pcId, ref PrefabDesc _desc, ref StationComponent __result) // Do when LDB is done
-        {
-
-            //PowerConsumerComponent powerConsumerComponent = __instance.powerSystem.consumerPool[_pcId];
-            //Debug.LogError("max accu = " + _desc.prefab.GetComponentInChildren<StationDesc>().maxEnergyAcc);
-            //Debug.LogError("energyPerTick = " + __result.energyPerTick);
-            //Debug.LogError("required energy = " + powerConsumerComponent.requiredEnergy);
-            //Debug.LogError("power ratio = " + powerConsumerComponent.powerRatio);
-            //Debug.LogError("workEnergyPerTick = " + powerConsumerComponent.workEnergyPerTick);
-
-            //StationComponent tmpSC = __result;
+        //[HarmonyPostfix]
+        //[HarmonyPatch(typeof(PlanetTransport), "NewStationComponent")] // maybe swap with normal VFPreload if not supporting modded tesla towers? or later preloadpostpatch LDBTool one again if already done
+        //public static void NewStationComponentPostfix(PlanetTransport __instance, ref int _entityId, ref int _pcId, ref PrefabDesc _desc, ref StationComponent __result) // Do when LDB is done
+        //{
 
 
+        //    //PowerConsumerComponent powerConsumerComponent = __instance.powerSystem.consumerPool[_pcId];
+        //    //Debug.LogError("max accu = " + _desc.prefab.GetComponentInChildren<StationDesc>().maxEnergyAcc);
+        //    //Debug.LogError("energyPerTick = " + __result.energyPerTick);
+        //    //Debug.LogError("required energy = " + powerConsumerComponent.requiredEnergy);
+        //    //Debug.LogError("power ratio = " + powerConsumerComponent.powerRatio);
+        //    //Debug.LogError("workEnergyPerTick = " + powerConsumerComponent.workEnergyPerTick);
 
-            //tmpSC.collectionIds = new int[2];
-            //for (int i = 0; i < length; i++)
-            //{
-
-            //}
+        //    //StationComponent tmpSC = __result;
 
 
-            //StationComponent altered = __result;
-            //altered.warperMaxCount = 500;
-            //__result = altered;
-        }
+
+        //    //tmpSC.collectionIds = new int[2];
+        //    //for (int i = 0; i < length; i++)
+        //    //{
+
+        //    //}
+
+
+        //    //StationComponent altered = __result;
+        //    //altered.warperMaxCount = 500;
+        //    //__result = altered;
+        //}
 
         //[HarmonyPrefix]
         //[HarmonyPatch(typeof(StationComponent), "SetPCState")]
@@ -536,12 +535,28 @@ namespace GigaStations
         //    return false;
         //}
 
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(PowerSystem), "NewConsumerComponent")]
+        public static bool NewConsumerComponentPrefix(PowerSystem __instance, ref int entityId, ref long work, ref long idle)
+        {
+            var x = LDB.items.Select((int)__instance.factory.entityPool[entityId].protoId).ID;
+            if (x != 2110 && x !=2111)
+            {
+                return true;
+            }
+
+            work = 1000000;
+
+            return true;
+
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(StationComponent), "Init")] // maybe swap with normal VFPreload if not supporting modded tesla towers? or later preloadpostpatch LDBTool one again if already done
         public static void StationComponentInitPostfix(StationComponent __instance, ref int _id, ref int _entityId, ref int _pcId, ref PrefabDesc _desc, ref EntityData[] _entityPool) // Do when LDB is done
         {
 
-            GigaStationsPlugin.logger.LogInfo($"protoID: {_entityPool[_entityId].protoId}");
+            //GigaStationsPlugin.logger.LogInfo($"protoID: {_entityPool[_entityId].protoId}");
 
             if (_entityPool[_entityId].protoId != 2110 && _entityPool[_entityId].protoId != 2111 && _entityPool[_entityId].protoId != 2112) // not my gigastations
             {
@@ -556,19 +571,26 @@ namespace GigaStations
             {
                 //_desc.stationMaxItemCount = GigaStationsPlugin.plsMaxItems;
                 //_desc.stationMaxDroneCount = GigaStationsPlugin.plsMaxDrones;
+                
+                
                 _desc.stationMaxEnergyAcc = Convert.ToInt64(GigaStationsPlugin.plsMaxAcuMJ * 1000000);
                 __instance.energyMax = GigaStationsPlugin.plsMaxAcuMJ * 1000000;
                 __instance.storage = new StationStore[GigaStationsPlugin.plsMaxSlots];
                 __instance.needs = new int[13];
+                __instance.energyPerTick = 1000000;
             }
             else if (__instance.isStellar && !__instance.isCollector)
             {
+                
+                
                 _desc.stationMaxEnergyAcc = Convert.ToInt64(GigaStationsPlugin.ilsMaxAcuGJ * 1000000000);
+                
+                //var x = _entityPool[_entityId].
                 __instance.energyMax = GigaStationsPlugin.ilsMaxAcuGJ * 1000000000;
                 __instance.warperMaxCount = GigaStationsPlugin.ilsMaxWarps;
                 __instance.storage = new StationStore[GigaStationsPlugin.ilsMaxSlots];
                 __instance.needs = new int[13];
-
+                __instance.energyPerTick = 1000000;
                 //_desc.stationMaxItemCount = GigaStationsPlugin.ilsMaxItems;
                 //_desc.stationMaxDroneCount = GigaStationsPlugin.ilsMaxDrones;
                 //_desc.stationMaxShipCount = GigaStationsPlugin.ilsMaxVessels;
@@ -615,9 +637,6 @@ namespace GigaStations
         {
             // Do for all, should not matter
 
-
-            //Debug.LogWarning(__instance.needs.Length);
-            //Debug.LogWarning(__instance.name + " | " + __instance.planetId);
             int num = __instance.storage.Length;
             if (num > 12)
             {
@@ -634,25 +653,6 @@ namespace GigaStations
                     __instance.needs[i] = ((i >= num || __instance.storage[i].count >= __instance.storage[i].max) ? 0 : __instance.storage[i].itemId);
                 }
             }
-
-            //__instance.needs[__instance.storage.Length] = ((!__instance.isStellar || __instance.warperCount >= __instance.warperMaxCount) ? 0 : 1210); // HIDDEN SLOT?!?!
-
-            //__instance.needs[0] = ((0 >= num || __instance.storage[0].count >= __instance.storage[0].max) ? 0 : __instance.storage[0].itemId);
-            //__instance.needs[1] = ((1 >= num || __instance.storage[1].count >= __instance.storage[1].max) ? 0 : __instance.storage[1].itemId);
-            //__instance.needs[2] = ((2 >= num || __instance.storage[2].count >= __instance.storage[2].max) ? 0 : __instance.storage[2].itemId);
-            //__instance.needs[3] = ((3 >= num || __instance.storage[3].count >= __instance.storage[3].max) ? 0 : __instance.storage[3].itemId);
-            //__instance.needs[4] = ((4 >= num || __instance.storage[4].count >= __instance.storage[4].max) ? 0 : __instance.storage[4].itemId);
-            //__instance.needs[5] = ((5 >= num || __instance.storage[5].count >= __instance.storage[5].max) ? 0 : __instance.storage[5].itemId);
-            //__instance.needs[6] = ((6 >= num || __instance.storage[6].count >= __instance.storage[6].max) ? 0 : __instance.storage[6].itemId);
-            //__instance.needs[7] = ((7 >= num || __instance.storage[7].count >= __instance.storage[7].max) ? 0 : __instance.storage[7].itemId);
-            //__instance.needs[8] = ((8 >= num || __instance.storage[8].count >= __instance.storage[8].max) ? 0 : __instance.storage[8].itemId);
-            //__instance.needs[9] = ((9 >= num || __instance.storage[9].count >= __instance.storage[9].max) ? 0 : __instance.storage[9].itemId);
-            //__instance.needs[10] = ((10 >= num || __instance.storage[10].count >= __instance.storage[10].max) ? 0 : __instance.storage[10].itemId);
-            //__instance.needs[11] = ((11 >= num || __instance.storage[11].count >= __instance.storage[11].max) ? 0 : __instance.storage[11].itemId);
-            //__instance.needs[12] = ((!__instance.isStellar || __instance.warperCount >= __instance.warperMaxCount) ? 0 : 1210); // HIDDEN SLOT?!?!
-
-
-
             return false;
         }
 
@@ -660,27 +660,6 @@ namespace GigaStations
         [HarmonyPatch(typeof(UIStationWindow), "OnMinDeliverVesselValueChange")]
         public static bool OnMinDeliverVesselValueChangePrefix(UIStationWindow __instance, ref float value)
         {
-
-
-            //if (__instance.event_lock || __instance.stationId == 0 || __instance.factory == null)
-            //    {
-            //        return false;
-            //    }
-
-            //StationComponent stationComponent = __instance.transport.stationPool[__instance.stationId];
-
-            //ItemProto itemProto = LDB.items.Select((int)__instance.factory.entityPool[stationComponent.entityId].protoId);
-
-            //GigaStationsPlugin.logger.LogInfo($"gigaProtoID: {itemProto.ID} --- gigaProtoSID: {itemProto.SID}");
-
-            //if (itemProto.ID != 2110 && itemProto.ID != 2111 && itemProto.ID != 2112)
-            //{
-            //    return true; // not my giga ILS, return to original code
-            //}
-
-
-
-
             if (__instance.event_lock)
             {
                 return false;
@@ -708,27 +687,6 @@ namespace GigaStations
         [HarmonyPatch(typeof(UIStationWindow), "OnMinDeliverDroneValueChange")]
         public static bool OnMinDeliverDroneValueChangePrefix(UIStationWindow __instance, ref float value)
         {
-
-
-
-            //if (__instance.stationId == 0 || __instance.factory == null)
-            //{
-            //    return false;
-            //}
-
-            //StationComponent stationComponent = __instance.transport.stationPool[__instance.stationId];
-
-            //ItemProto itemProto = LDB.items.Select((int)__instance.factory.entityPool[stationComponent.entityId].protoId);
-
-            //GigaStationsPlugin.logger.LogInfo($"gigaProtoID: {itemProto.ID} --- gigaProtoSID: {itemProto.SID}");
-
-            //if (itemProto.ID != 2110 && itemProto.ID != 2111 && itemProto.ID != 2112)
-            //{
-            //    return true; // not my giga ILS, return to original code
-            //}
-
-
-
             if (__instance.event_lock)
             {
                 return false;
@@ -749,7 +707,6 @@ namespace GigaStations
             }
             stationComponent.deliveryDrones = num;
             __instance.minDeliverDroneValue.text = num.ToString("0") + " %";
-
             return false;
         }
 
@@ -757,17 +714,13 @@ namespace GigaStations
         [HarmonyPatch(typeof(UIStationWindow), "OnStationIdChange")]
         public static void OnStationIdChangePostfix(UIStationWindow __instance)
         {
-
-            if (__instance.stationId != 0 && __instance.factory != null)
+            if (__instance.stationId == 0 || __instance.factory == null)
             {
-                StationComponent stationComponent = __instance.transport.stationPool[__instance.stationId];
-                if (stationComponent == null)
-                {
-                    return;
-                }
-                __instance.minDeliverDroneSlider.value = ((stationComponent.deliveryShips <= 1) ? 0f : (0.1f * (float)stationComponent.deliveryShips));
-                __instance.minDeliverVesselSlider.value = 100;
+                return;
             }
+            StationComponent stationComponent = __instance.transport.stationPool[__instance.stationId];
+            __instance.minDeliverDroneSlider.value = ((stationComponent.deliveryDrones <= 1) ? 0f : (0.1f * (float)stationComponent.deliveryDrones)) * 10f;
+            __instance.minDeliverVesselSlider.value = ((stationComponent.deliveryShips <= 1) ? 0f : (0.1f * (float)stationComponent.deliveryShips)) * 10f;
         }
 
         [HarmonyPrefix]
@@ -781,17 +734,11 @@ namespace GigaStations
             }
 
             StationComponent stationComponent = __instance.transport.stationPool[__instance.stationId];
-
             ItemProto itemProto = LDB.items.Select((int)__instance.factory.entityPool[stationComponent.entityId].protoId);
-
-            GigaStationsPlugin.logger.LogInfo($"gigaProtoID: {itemProto.ID} --- gigaProtoSID: {itemProto.SID}");
 
             if (itemProto.ID != 2110 && itemProto.ID != 2111 && itemProto.ID != 2112)
             {
-                __instance.minDeliverVesselSlider.maxValue = 100; //keep 1% step
-                __instance.minDeliverDroneSlider.maxValue = 100;
-                __instance.minDeliverDroneSlider.value = ((stationComponent.deliveryShips <= 1) ? 0f : (0.1f * (float)stationComponent.deliveryShips));
-                __instance.minDeliverVesselSlider.value = 100;
+
 
                 //back to vanilla positions/size
                 __instance.nameInput.GetComponent<RectTransform>().anchoredPosition = new Vector2(__instance.nameInput.GetComponent<RectTransform>().position.x, 0f);
@@ -871,7 +818,8 @@ namespace GigaStations
                 long workEnergyPerTick2 = __instance.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick;
                 //__instance.maxChargePowerSlider.maxValue = (float)(num2 / 50000L);
                 __instance.maxChargePowerSlider.maxValue = 333.83333f;
-                __instance.maxChargePowerSlider.minValue = (float)(num3 / 50000L);
+                //__instance.maxChargePowerSlider.minValue = (float)(num3 / 150000L);
+                __instance.maxChargePowerSlider.minValue = 10.0149999f;
                 __instance.maxChargePowerSlider.value = (float)(workEnergyPerTick2 / 50000L);
                 StringBuilderUtility.WriteKMG(__instance.powerServedSB, 8, workEnergyPerTick2 * 60L, true);
                 __instance.maxChargePowerValue.text = __instance.powerServedSB.ToString();
@@ -940,9 +888,10 @@ namespace GigaStations
                 }
                 __instance.warperNecessaryCheck.enabled = stationComponent.warperNecessary;
 
-                __instance.minDeliverDroneSlider.maxValue = 100;
+                //__instance.minDeliverDroneSlider.maxValue = 100;
                 int num7 = stationComponent.deliveryDrones;
-                __instance.minDeliverDroneSlider.value = ((num7 <= 1) ? 0f : (0.1f * (float)num7));
+                //__instance.minDeliverDroneSlider.value = ((num7 <= 1) ? 0f : (0.1f * (float)num7));
+                //__instance.minDeliverDroneSlider.value = ((num7 <= 1) ? 0f : (0.1f * (float)num7)) * 10f;
                 if (num7 < 1)
                 {
                     num7 = 1;
@@ -950,9 +899,8 @@ namespace GigaStations
                 __instance.minDeliverDroneValue.text = num7.ToString("0") + " %";
 
 
-                __instance.minDeliverVesselSlider.maxValue = 100;
-                __instance.minDeliverVesselSlider.value = 100;
                 //__instance.minDeliverVesselSlider.value = ((num7 <= 1) ? 0f : (0.1f * (float)num7));
+                //__instance.minDeliverVesselSlider.value = ((num7 <= 1) ? 0f : (0.1f * (float)num7)) * 10f;
                 num7 = stationComponent.deliveryShips;
                 if (num7 < 1)
                 {
@@ -1044,187 +992,6 @@ namespace GigaStations
             return false;
         }
 
-        //[HarmonyPostfix]
-        //[HarmonyPatch(typeof(UIStationWindow), "OnStationIdChange")]
-        //public static void OnStationIdChangePost(UIStationWindow __instance)
-        //{
-        //    //__instance.windowTrans.sizeDelta = new Vector2(600f, (float)(340 + 76 * 12 + 36));
-        //    __instance.nameInput.GetComponent<RectTransform>().anchoredPosition = new Vector2(__instance.nameInput.GetComponent<RectTransform>().position.x + 215f,-15f);
-
-
-        //    //StationComponent stationComponent = __instance.transport.stationPool.Last();
-        //    StationComponent stationComponent = __instance.storageUIs[0].station;
-        //    __instance.titleText.text = "Taki7o7's Giga Stations Mod";
-        //    //__instance.nameInput.text = (!string.IsNullOrEmpty(stationComponent.name)) ? "Orbital Giga Collector" : ((!stationComponent.isStellar) ? ("Planetary Giga Station #" + stationComponent.id.ToString()) : ("Interstellar Giga Station #" + stationComponent.gid.ToString()));
-        //    //var tta = __instance.titleText.GetComponent<RectTransform>();
-        //    //tta.anchoredPosition = new Vector2(tta.anchoredPosition.x, -10f);
-
-        //    if (!stationComponent.isCollector)
-        //    {
-        //        __instance.windowTrans.sizeDelta = new Vector2(600f, (float)(1070));
-        //        __instance.panelDownTrans.anchoredPosition = new Vector2(__instance.panelDownTrans.anchoredPosition.x, 156f);
-        //        __instance.maxChargePowerGroup.anchoredPosition = new Vector2(__instance.maxChargePowerGroup.anchoredPosition.x, -36f);
-        //        __instance.droneIconButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(__instance.droneIconButton.GetComponent<RectTransform>().position.x, -25f);
-        //        __instance.shipIconButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(__instance.shipIconButton.GetComponent<RectTransform>().position.x, -25f);
-        //        __instance.warperIconButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(__instance.warperIconButton.GetComponent<RectTransform>().position.x, -25f);
-        //        __instance.powerGroupRect.anchoredPosition = new Vector3(__instance.powerGroupRect.anchoredPosition.x, 30f);
-        //    }
-
-        //}
-
-        //[HarmonyTranspiler]
-        //[HarmonyPatch(typeof(UIStationWindow), "OnStationIdChange")]
-        //public static IEnumerable<CodeInstruction> OnStationIdChangeTranspiler(IEnumerable<CodeInstruction> instructions)
-        //{
-        //    List<CodeInstruction> list = instructions.ToList<CodeInstruction>();
-
-        //    if (list[543].opcode == System.Reflection.Emit.OpCodes.Ldc_I4_S && list[543].operand == (object)36) //windowTrans
-        //    {
-        //        Debug.LogError("match miiiiep");
-        //        list[543].opcode = System.Reflection.Emit.OpCodes.Ldc_I4;
-        //        list[543].operand = 300;
-        //    }
-        //    if (list[679].opcode == System.Reflection.Emit.OpCodes.Ldc_I4_S && list[679].operand == (object)36) //windowTrans
-        //    {
-        //        Debug.LogError("match miiiiep");
-        //        list[679].opcode = System.Reflection.Emit.OpCodes.Ldc_I4;
-        //        list[679].operand = 300;
-        //    }
-
-        //    return list.AsEnumerable<CodeInstruction>();
-        //}
-
-        //[HarmonyTranspiler]
-        //[HarmonyPatch(typeof(UIStationWindow), "_OnCreate")]
-        //public static IEnumerable<CodeInstruction> StationUITranspiler(IEnumerable<CodeInstruction> instructions)
-        //{
-        //    List<CodeInstruction> list = instructions.ToList<CodeInstruction>();
-
-        //    if (list[1].opcode == System.Reflection.Emit.OpCodes.Ldc_I4_6)
-        //    {
-        //        list[1].opcode = System.Reflection.Emit.OpCodes.Ldc_I4;
-        //        list[1].operand = 12;
-        //    }
-        //    if (list[49].opcode == System.Reflection.Emit.OpCodes.Ldc_I4_6)
-        //    {
-        //        list[49].opcode = System.Reflection.Emit.OpCodes.Ldc_I4;
-        //        list[49].operand = 12;
-        //    }
-        //    if (list[25].opcode == System.Reflection.Emit.OpCodes.Ldc_I4_S && Convert.ToInt32(list[25].operand) == -90)
-        //    {
-        //        list[25].opcode = System.Reflection.Emit.OpCodes.Ldc_I4_S;
-        //        list[25].operand = -40;
-        //    }
-        //    return list.AsEnumerable<CodeInstruction>();
-        //}
-
-        //[HarmonyPrefix]
-        //[HarmonyPatch(typeof(UIStationWindow), "_OnUpdate")]
-        //public static bool _OnUpdatePrefix(UIStationWindow __instance)
-        //{
-        //    if (__instance.stationId == 0 || __instance.factory == null)
-        //    {
-        //        __instance._Close();
-        //        return false;
-        //    }
-        //    StationComponent stationComponent = __instance.transport.stationPool[__instance.stationId];
-
-        //    ItemProto itemProto = LDB.items.Select((int)__instance.factory.entityPool[stationComponent.entityId].protoId);
-
-        //    if (stationComponent == null || stationComponent.id != __instance.stationId)
-        //    {
-        //        __instance._Close();
-        //        return false;
-        //    }
-        //    bool logisticShipWarpDrive = GameMain.history.logisticShipWarpDrive;
-        //    if (stationComponent.isStellar && logisticShipWarpDrive)
-        //    {
-        //        __instance.warperIconButton.gameObject.SetActive(true);
-        //    }
-        //    PowerConsumerComponent powerConsumerComponent = __instance.powerSystem.consumerPool[stationComponent.pcId];
-        //    int networkId = powerConsumerComponent.networkId;
-        //    PowerNetwork powerNetwork = __instance.powerSystem.netPool[networkId];
-        //    float num = (powerNetwork == null || networkId <= 0) ? 0f : ((float)powerNetwork.consumerRatio);
-        //    float num2 = (float)((double)stationComponent.energy / (double)stationComponent.energyMax);
-        //    double num3 = (double)(powerConsumerComponent.requiredEnergy * 60L);
-        //    long valuel = (long)(num3 * (double)num);
-        //    if (num > 0f)
-        //    {
-        //        StringBuilderUtility.WriteKMG(__instance.powerServedSB, 8, valuel, false);
-
-        //        if (true)
-        //        {
-
-        //        }
-        //        if (num2 >= 0.98f)
-        //        {
-        //            __instance.powerText.text = 
-        //            __instance.stateText.text = "已充满".Translate();
-        //            __instance.stateText.color = __instance.idleColor;
-        //        }
-        //        else
-        //        {
-        //            __instance.powerText.text = __instance.powerServedSB.ToString();
-        //            __instance.stateText.text = ((num3 <= 0.0) ? "待机中".Translate() : "充电中".Translate());
-        //            __instance.stateText.color = ((num3 <= 0.0) ? __instance.idleColor : __instance.chargeColor);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        __instance.powerText.text = "断电".Translate();
-        //        __instance.stateText.text = "无法充电".Translate();
-        //        __instance.stateText.color = __instance.powerOffColor;
-        //    }
-        //    StringBuilderUtility.WriteKMG(__instance.powerAccumulatedSB, 8, stationComponent.energy, false);
-        //    __instance.energyText.text = __instance.powerAccumulatedSB.ToString().TrimStart(new char[0]);
-        //    __instance.powerIcon.color = ((num <= 0f && num2 <= 0.12f) ? __instance.powerOffIconColor : __instance.powerNormalIconColor);
-        //    __instance.powerText.color = __instance.powerNormalColor;
-        //    __instance.energyBar.fillAmount = num2;
-        //    __instance.powerText.color = ((num <= 0f) ? __instance.powerOffColor : __instance.powerNormalColor);
-        //    float num4 = (!stationComponent.isStellar) ? 300f : ((!logisticShipWarpDrive) ? 240f : 180f);
-        //    if (num2 > 0.7f)
-        //    {
-        //        __instance.energyText.rectTransform.anchoredPosition = new Vector2(Mathf.Round(num4 * num2 - 30f), 0f);
-        //        __instance.energyText.color = __instance.energyTextColor1;
-        //        __instance.energyBar.color = __instance.energyBarColor0;
-        //    }
-        //    else
-        //    {
-        //        __instance.energyText.rectTransform.anchoredPosition = new Vector2(Mathf.Round(num4 * num2 + 30f), 0f);
-        //        __instance.energyText.color = ((num2 >= 0.12f) ? __instance.energyTextColor0 : __instance.energyTextColor2);
-        //        __instance.energyBar.color = ((num2 >= 0.12f) ? __instance.energyBarColor0 : __instance.energyBarColor1);
-        //    }
-        //    __instance.droneCountText.text = stationComponent.idleDroneCount.ToString() + "/" + (stationComponent.idleDroneCount + stationComponent.workDroneCount).ToString();
-        //    if (stationComponent.isStellar)
-        //    {
-        //        __instance.shipCountText.text = stationComponent.idleShipCount.ToString() + "/" + (stationComponent.idleShipCount + stationComponent.workShipCount).ToString();
-        //        __instance.warperCountText.text = stationComponent.warperCount.ToString();
-        //    }
-        //    for (int i = 0; i < __instance.storageUIs.Length; i++)
-        //    {
-        //        __instance.storageUIs[i]._Update();
-        //    }
-        //    __instance.warperNecessaryCheck.enabled = stationComponent.warperNecessary;
-        //    __instance.includeOrbitCollectorCheck.enabled = stationComponent.includeOrbitCollector;
-
-        //    return false;
-        //}
-
-        //[HarmonyTranspiler]
-        //[HarmonyPatch(typeof(UIStationWindow), "OnWarperIconClick")]
-        //public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        //{
-        //    List<CodeInstruction> list = instructions.ToList<CodeInstruction>();
-        //    if (GigaStationsPlugin.ilsMaxWarps != 50)
-        //    {
-        //        if (list[72].opcode == System.Reflection.Emit.OpCodes.Ldc_I4_S && Convert.ToInt32(list[72].operand) == 50)
-        //        {
-        //            list[72].opcode = System.Reflection.Emit.OpCodes.Ldc_I4;
-        //            list[72].operand = GigaStationsPlugin.ilsMaxWarps;
-        //        }
-        //    }
-        //    return list.AsEnumerable<CodeInstruction>();
-        //}
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(UIStationWindow), "OnWarperIconClick")]
@@ -1240,14 +1007,12 @@ namespace GigaStations
 
             ItemProto gigaProto = LDB.items.Select((int)__instance.factory.entityPool[stationComponent.entityId].protoId);
 
-            GigaStationsPlugin.logger.LogInfo($"gigaProtoID: {gigaProto.ID} --- gigaProtoSID: {gigaProto.SID}");
+            //GigaStationsPlugin.logger.LogInfo($"gigaProtoID: {gigaProto.ID} --- gigaProtoSID: {gigaProto.SID}");
 
             if (gigaProto.ID != 2110 && gigaProto.ID != 2111 && gigaProto.ID != 2112)
             {
                 return true; // not my giga ILS, return to original code
             }
-
-
 
 
             if (__instance.stationId == 0 || __instance.factory == null)
@@ -1331,19 +1096,7 @@ namespace GigaStations
         }
 
 
-
-
-
-
-
-        //[HarmonyPrefix]
-        //[HarmonyPatch(typeof(UIStationStorage), "OnMaxSliderValueChange")]
-        //public static bool OnMaxSliderValueChange(ref float val)
-        //{
-        //    val *= 5f;
-        //    return true;
-        //}
-
+        // Fixing Belt cannot input for item-slots 7-12
         [HarmonyPrefix]
         [HarmonyPatch(typeof(CargoPath), "TryPickItemAtRear", new Type[] { typeof(int[]), typeof(int) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
         public static bool TryPickItemAtRear(CargoPath __instance, int[] needs, out int needIdx, ref int __result)
@@ -1548,52 +1301,20 @@ namespace GigaStations
         [HarmonyPatch(typeof(UIStationWindow), "_OnCreate")]
         public static bool _OnCreatePrefix(UIStationWindow __instance)
         {
-            // do always?
+            // do always
 
-            //StationComponent stationComponent = __instance.transport.stationPool[__instance.stationId];
+            //part of 1% sliderstep fix
+            __instance.minDeliverDroneSlider.maxValue = 100;
+            __instance.minDeliverVesselSlider.maxValue = 100;
 
-            //ItemProto itemProto = LDB.items.Select((int)__instance.factory.entityPool[stationComponent.entityId].protoId);
-
-            //Debug.Log($"########################### _OnCreate ID: {itemProto.ID}");
-
-            //if (itemProto.ID != 2110 && itemProto.ID != 2111 && itemProto.ID != 2112)
-            //{
-            //    return true; // not my giga ILS, return to original code
-            //}
-
-
-
-
-            //if (__instance.factory.transport.stationPool[__instance._stationId] != null)
-            //{
-            //    if (__instance.factory.transport.stationPool[__instance._stationId].isStellar)
-            //    {
-            //        __instance.storageUIs = new UIStationStorage[GigaStationsPlugin.ilsMaxSlots];
-            //    }
-            //    else if (!__instance.factory.transport.stationPool[__instance._stationId].isCollector) // pls
-            //    {
-            //        __instance.storageUIs = new UIStationStorage[GigaStationsPlugin.plsMaxSlots];
-            //    }
-            //    else
-            //    {
-            //        __instance.storageUIs = new UIStationStorage[6];
-            //    }
-            //}
-            //else
-            //{
-            //    __instance.storageUIs = new UIStationStorage[6];
-            //}
 
             __instance.storageUIs = new UIStationStorage[12];
-            //for (int i = 0; i < __instance.storageUIs.Length; i++)
             for (int i = 0; i < __instance.storageUIs.Length; i++)
             {
                 __instance.storageUIs[i] = UnityEngine.Object.Instantiate<UIStationStorage>(__instance.storageUIPrefab, __instance.storageUIPrefab.transform.parent);
                 __instance.storageUIs[i].GetComponent<RectTransform>().sizeDelta = new Vector2(__instance.storageUIs[i].GetComponent<RectTransform>().sizeDelta.x, __instance.storageUIs[i].GetComponent<RectTransform>().sizeDelta.y - 10f);
                 (__instance.storageUIs[i].transform as RectTransform).anchoredPosition = new Vector2(40f, (float)(-40 - 66 * i));
                 __instance.storageUIs[i].stationWindow = __instance;
-                //__instance.titleText.gameObject.SetActive(false);
-                //__instance.titleText.text = "Taki7o7's Giga Station MOD";
                 __instance.storageUIs[i]._Create();
             }
             return false;

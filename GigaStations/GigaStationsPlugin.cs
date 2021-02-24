@@ -142,11 +142,12 @@ namespace GigaStations
             Giga_PLS.BuildIndex = 410;
             Giga_PLS.GridIndex = RecipeGiga_PLS.GridIndex;
             Giga_PLS.handcraft = RecipeGiga_PLS;
+            Giga_PLS.maincraft = RecipeGiga_PLS;
             Giga_PLS.handcrafts = new List<RecipeProto> { RecipeGiga_PLS };
             Giga_PLS.recipes = new List<RecipeProto> { RecipeGiga_PLS };
             Giga_PLS.makes = new List<RecipeProto>();
             Giga_PLS.prefabDesc = oriItem.prefabDesc.Copy();
-
+            Giga_PLS.prefabDesc.modelIndex = Giga_PLS.ModelIndex;
             Giga_PLS.prefabDesc.stationMaxItemCount = GigaStationsPlugin.plsMaxStorage;
             Giga_PLS.prefabDesc.stationMaxItemKinds = GigaStationsPlugin.plsMaxSlots;
             Giga_PLS.prefabDesc.stationMaxDroneCount = GigaStationsPlugin.plsMaxDrones;
@@ -199,11 +200,12 @@ namespace GigaStations
             Giga_ILS.BuildIndex = 411;
             Giga_ILS.GridIndex = RecipeGiga_ILS.GridIndex;
             Giga_ILS.handcraft = RecipeGiga_ILS;
+            Giga_ILS.maincraft = RecipeGiga_ILS;
             Giga_ILS.handcrafts = new List<RecipeProto> { RecipeGiga_ILS };
             Giga_ILS.recipes = new List<RecipeProto> { RecipeGiga_ILS };
             Giga_ILS.makes = new List<RecipeProto>();
             Giga_ILS.prefabDesc = oriItem.prefabDesc.Copy();
-
+            Giga_ILS.prefabDesc.modelIndex = Giga_ILS.ModelIndex;
             Giga_ILS.prefabDesc.stationMaxItemCount = GigaStationsPlugin.ilsMaxStorage;
             Giga_ILS.prefabDesc.stationMaxItemKinds = GigaStationsPlugin.ilsMaxSlots;
             Giga_ILS.prefabDesc.stationMaxDroneCount = GigaStationsPlugin.ilsMaxDrones;
@@ -255,11 +257,12 @@ namespace GigaStations
             Giga_Collector.BuildIndex = 412;
             Giga_Collector.GridIndex = RecipeGiga_Collector.GridIndex;
             Giga_Collector.handcraft = RecipeGiga_Collector;
+            Giga_Collector.maincraft = RecipeGiga_Collector;
             Giga_Collector.handcrafts = new List<RecipeProto> { RecipeGiga_Collector };
             Giga_Collector.recipes = new List<RecipeProto> { RecipeGiga_Collector };
             Giga_Collector.makes = new List<RecipeProto>();
             Giga_Collector.prefabDesc = oriItem.prefabDesc.Copy();
-
+            Giga_Collector.prefabDesc.modelIndex = Giga_Collector.ModelIndex;
             Giga_Collector.prefabDesc.stationMaxItemCount = GigaStationsPlugin.ilsMaxStorage;
             Giga_Collector.prefabDesc.stationCollectSpeed = oriItem.prefabDesc.stationCollectSpeed * GigaStationsPlugin.colSpeedMultiplier;
             // Set MaxWarpers in station init!!!!!

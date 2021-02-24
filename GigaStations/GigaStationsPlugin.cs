@@ -55,10 +55,10 @@ namespace GigaStations
 
 
         //VesselCapacity
-        public static int vesselCapacity { get; set; } = 3000; //Vanilla depends on upgrade-lvl, but max is 1000 (limit to 5000?)
+        public static int vesselCapacityMultiplier { get; set; } = 3; //Vanilla depends on upgrade-lvl, but max is 1000 (limit to 5000?)
 
         //DroneCapacity
-        public static int droneCapacity { get; set; } = 300; //Vanilla depends on upgrade-lvl, but max is 100 (limit to 500?)
+        public static int droneCapacityMultiplier { get; set; } = 3; //Vanilla depends on upgrade-lvl, but max is 100 (limit to 500?)
 
 
 
@@ -91,10 +91,10 @@ namespace GigaStations
 
 
             //VesselCapacity
-            vesselCapacity = Config.Bind<int>("-|4|- Vessel", "-| 1 Max. Capacity", 3, "Vessel Capacity Multiplier\n1 == 1000 Vessel Capacity at max Level").Value;
+            vesselCapacityMultiplier = Config.Bind<int>("-|4|- Vessel", "-| 1 Max. Capacity", 3, "Vessel Capacity Multiplier\n1 == 1000 Vessel Capacity at max Level").Value;
 
             //DroneCapacity
-            droneCapacity = Config.Bind<int>("-|5|- Drone", "-| 1 Max. Capacity", 3, "Drone Capacity Multiplier\n1 == 100 Drone Capacity at max Level").Value;
+            droneCapacityMultiplier = Config.Bind<int>("-|5|- Drone", "-| 1 Max. Capacity", 3, "Drone Capacity Multiplier\n1 == 100 Drone Capacity at max Level").Value;
 
 
 
@@ -307,65 +307,65 @@ namespace GigaStations
             if (GameMain.history.TechUnlocked(3508))
             {
                 GigaStationsPlugin.logger.LogInfo($"\nLogistic carrier capacity Level 8\nSetting Carrier Capacity Multipliers from settings...");
-                GigaStationsPlugin.logger.LogInfo($"\nLevel 8\nSetting Vessels Capacity: 1000 * {GigaStationsPlugin.vesselCapacity} = {1000 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 100 * {GigaStationsPlugin.droneCapacity} = {100 * GigaStationsPlugin.droneCapacity}");
-                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 1000;
-                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 100;
+                GigaStationsPlugin.logger.LogInfo($"\nLevel 8\nSetting Vessels Capacity: 1000 * {GigaStationsPlugin.vesselCapacityMultiplier} = {1000 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 100 * {GigaStationsPlugin.droneCapacityMultiplier} = {100 * GigaStationsPlugin.droneCapacityMultiplier}");
+                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 1000;
+                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 100;
             }
             else if (GameMain.history.TechUnlocked(3507))
             {
                 GigaStationsPlugin.logger.LogInfo($"\nLogistic carrier capacity Level 7\nSetting Carrier Capacity Multipliers from settings...");
-                GigaStationsPlugin.logger.LogInfo($"\nLevel 7\nSetting Vessels Capacity: 800 * {GigaStationsPlugin.vesselCapacity} = {800 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 80 * {GigaStationsPlugin.droneCapacity} = {80 * GigaStationsPlugin.droneCapacity}");
-                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 800;
-                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 80;
+                GigaStationsPlugin.logger.LogInfo($"\nLevel 7\nSetting Vessels Capacity: 800 * {GigaStationsPlugin.vesselCapacityMultiplier} = {800 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 80 * {GigaStationsPlugin.droneCapacityMultiplier} = {80 * GigaStationsPlugin.droneCapacityMultiplier}");
+                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 800;
+                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 80;
             }
             else if (GameMain.history.TechUnlocked(3506))
             {
                 GigaStationsPlugin.logger.LogInfo($"\nLogistic carrier capacity Level 6\nSetting Carrier Capacity Multipliers from settings...");
-                GigaStationsPlugin.logger.LogInfo($"\nLevel 6\nSetting Vessels Capacity: 600 * {GigaStationsPlugin.vesselCapacity} = {600 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 70 * {GigaStationsPlugin.droneCapacity} = {70 * GigaStationsPlugin.droneCapacity}");
-                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 600;
-                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 70;
+                GigaStationsPlugin.logger.LogInfo($"\nLevel 6\nSetting Vessels Capacity: 600 * {GigaStationsPlugin.vesselCapacityMultiplier} = {600 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 70 * {GigaStationsPlugin.droneCapacityMultiplier} = {70 * GigaStationsPlugin.droneCapacityMultiplier}");
+                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 600;
+                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 70;
             }
             else if (GameMain.history.TechUnlocked(3505))
             {
                 GigaStationsPlugin.logger.LogInfo($"\nLogistic carrier capacity Level 5\nSetting Carrier Capacity Multipliers from settings...");
-                GigaStationsPlugin.logger.LogInfo($"\nLevel 5\nSetting Vessels Capacity: 500 * {GigaStationsPlugin.vesselCapacity} = {500 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 60 * {GigaStationsPlugin.droneCapacity} = {60 * GigaStationsPlugin.droneCapacity}");
-                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 500;
-                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 60;
+                GigaStationsPlugin.logger.LogInfo($"\nLevel 5\nSetting Vessels Capacity: 500 * {GigaStationsPlugin.vesselCapacityMultiplier} = {500 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 60 * {GigaStationsPlugin.droneCapacityMultiplier} = {60 * GigaStationsPlugin.droneCapacityMultiplier}");
+                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 500;
+                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 60;
             }
             else if (GameMain.history.TechUnlocked(3504))
             {
                 GigaStationsPlugin.logger.LogInfo($"\nLogistic carrier capacity Level 4\nSetting Carrier Capacity Multipliers from settings...");
-                GigaStationsPlugin.logger.LogInfo($"\nLevel 4\nSetting Vessels Capacity: 400 * {GigaStationsPlugin.vesselCapacity} = {400 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 50 * {GigaStationsPlugin.droneCapacity} = {50 * GigaStationsPlugin.droneCapacity}");
-                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 400;
-                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 50;
+                GigaStationsPlugin.logger.LogInfo($"\nLevel 4\nSetting Vessels Capacity: 400 * {GigaStationsPlugin.vesselCapacityMultiplier} = {400 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 50 * {GigaStationsPlugin.droneCapacityMultiplier} = {50 * GigaStationsPlugin.droneCapacityMultiplier}");
+                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 400;
+                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 50;
             }
             else if (GameMain.history.TechUnlocked(3503))
             {
                 GigaStationsPlugin.logger.LogInfo($"\nLogistic carrier capacity Level 3\nSetting Carrier Capacity Multipliers from settings...");
-                GigaStationsPlugin.logger.LogInfo($"\nLevel 3\nSetting Vessels Capacity: 300 * {GigaStationsPlugin.vesselCapacity} = {300 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 40 * {GigaStationsPlugin.droneCapacity} = {40 * GigaStationsPlugin.droneCapacity}");
-                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 300;
-                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 40;
+                GigaStationsPlugin.logger.LogInfo($"\nLevel 3\nSetting Vessels Capacity: 300 * {GigaStationsPlugin.vesselCapacityMultiplier} = {300 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 40 * {GigaStationsPlugin.droneCapacityMultiplier} = {40 * GigaStationsPlugin.droneCapacityMultiplier}");
+                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 300;
+                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 40;
             }
             else if (GameMain.history.TechUnlocked(3502))
             {
                 GigaStationsPlugin.logger.LogInfo($"\nLogistic carrier capacity Level 2\nSetting Carrier Capacity Multipliers from settings...");
-                GigaStationsPlugin.logger.LogInfo($"\nLevel 2\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacity} = {200 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 35 * {GigaStationsPlugin.droneCapacity} = {35 * GigaStationsPlugin.droneCapacity}");
-                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 200;
-                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 35;
+                GigaStationsPlugin.logger.LogInfo($"\nLevel 2\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacityMultiplier} = {200 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 35 * {GigaStationsPlugin.droneCapacityMultiplier} = {35 * GigaStationsPlugin.droneCapacityMultiplier}");
+                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 200;
+                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 35;
             }
             else if (GameMain.history.TechUnlocked(3501))
             {
                 GigaStationsPlugin.logger.LogInfo($"\nLogistic carrier capacity Level 1\nSetting Carrier Capacity Multipliers from settings...");
-                GigaStationsPlugin.logger.LogInfo($"\nLevel 1\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacity} = {200 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 30 * {GigaStationsPlugin.droneCapacity} = {30 * GigaStationsPlugin.droneCapacity}");
-                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 200;
-                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 30;
+                GigaStationsPlugin.logger.LogInfo($"\nLevel 1\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacityMultiplier} = {200 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 30 * {GigaStationsPlugin.droneCapacityMultiplier} = {30 * GigaStationsPlugin.droneCapacityMultiplier}");
+                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 200;
+                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 30;
             }
             else // still lvl 0
             {
                 GigaStationsPlugin.logger.LogInfo($"\nLogistic carrier capacity Level 0\nSetting Carrier Capacity Multipliers from settings...");
-                GigaStationsPlugin.logger.LogInfo($"\nLevel 0\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacity} = {200 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 25 * {GigaStationsPlugin.droneCapacity} = {25 * GigaStationsPlugin.droneCapacity}");
-                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 200;
-                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 25;
+                GigaStationsPlugin.logger.LogInfo($"\nLevel 0\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacityMultiplier} = {200 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 25 * {GigaStationsPlugin.droneCapacityMultiplier} = {25 * GigaStationsPlugin.droneCapacityMultiplier}");
+                GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 200;
+                GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 25;
             }
 
 
@@ -391,51 +391,51 @@ namespace GigaStations
             {
                 case 3508:
                     GigaStationsPlugin.logger.LogInfo($"\nUnlocked Logistic carrier capacity Level {techitemLevel}\nSetting Carrier Capacity Multipliers from settings...");
-                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 1000 * {GigaStationsPlugin.vesselCapacity} = {1000 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 100 * {GigaStationsPlugin.droneCapacity} = {100 * GigaStationsPlugin.droneCapacity}");
-                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 1000;
-                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 100;
+                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 1000 * {GigaStationsPlugin.vesselCapacityMultiplier} = {1000 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 100 * {GigaStationsPlugin.droneCapacityMultiplier} = {100 * GigaStationsPlugin.droneCapacityMultiplier}");
+                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 1000;
+                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 100;
                     break;
                 case 3507:
                     GigaStationsPlugin.logger.LogInfo($"\nUnlocked Logistic carrier capacity Level {techitemLevel}\nSetting Carrier Capacity Multipliers from settings...");
-                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 800 * {GigaStationsPlugin.vesselCapacity} = {800 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 80 * {GigaStationsPlugin.droneCapacity} = {80 * GigaStationsPlugin.droneCapacity}");
-                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 800;
-                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 80;
+                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 800 * {GigaStationsPlugin.vesselCapacityMultiplier} = {800 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 80 * {GigaStationsPlugin.droneCapacityMultiplier} = {80 * GigaStationsPlugin.droneCapacityMultiplier}");
+                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 800;
+                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 80;
                     break;
                 case 3506:
                     GigaStationsPlugin.logger.LogInfo($"\nUnlocked Logistic carrier capacity Level {techitemLevel}\nSetting Carrier Capacity Multipliers from settings...");
-                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 600 * {GigaStationsPlugin.vesselCapacity} = {600 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 70 * {GigaStationsPlugin.droneCapacity} = {70 * GigaStationsPlugin.droneCapacity}");
-                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 600;
-                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 70;
+                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 600 * {GigaStationsPlugin.vesselCapacityMultiplier} = {600 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 70 * {GigaStationsPlugin.droneCapacityMultiplier} = {70 * GigaStationsPlugin.droneCapacityMultiplier}");
+                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 600;
+                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 70;
                     break;
                 case 3505:
                     GigaStationsPlugin.logger.LogInfo($"\nUnlocked Logistic carrier capacity Level {techitemLevel}\nSetting Carrier Capacity Multipliers from settings...");
-                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 500 * {GigaStationsPlugin.vesselCapacity} = {500 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 60 * {GigaStationsPlugin.droneCapacity} = {60 * GigaStationsPlugin.droneCapacity}");
-                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 500;
-                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 60;
+                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 500 * {GigaStationsPlugin.vesselCapacityMultiplier} = {500 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 60 * {GigaStationsPlugin.droneCapacityMultiplier} = {60 * GigaStationsPlugin.droneCapacityMultiplier}");
+                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 500;
+                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 60;
                     break;
                 case 3504:
                     GigaStationsPlugin.logger.LogInfo($"\nUnlocked Logistic carrier capacity Level {techitemLevel}\nSetting Carrier Capacity Multipliers from settings...");
-                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 400 * {GigaStationsPlugin.vesselCapacity} = {400 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 50 * {GigaStationsPlugin.droneCapacity} = {50 * GigaStationsPlugin.droneCapacity}");
-                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 400;
-                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 50;
+                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 400 * {GigaStationsPlugin.vesselCapacityMultiplier} = {400 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 50 * {GigaStationsPlugin.droneCapacityMultiplier} = {50 * GigaStationsPlugin.droneCapacityMultiplier}");
+                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 400;
+                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 50;
                     break;
                 case 3503:
                     GigaStationsPlugin.logger.LogInfo($"\nUnlocked Logistic carrier capacity Level {techitemLevel}\nSetting Carrier Capacity Multipliers from settings...");
-                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 300 * {GigaStationsPlugin.vesselCapacity} = {300 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 40 * {GigaStationsPlugin.droneCapacity} = {40 * GigaStationsPlugin.droneCapacity}");
-                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 300;
-                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 40;
+                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 300 * {GigaStationsPlugin.vesselCapacityMultiplier} = {300 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 40 * {GigaStationsPlugin.droneCapacityMultiplier} = {40 * GigaStationsPlugin.droneCapacityMultiplier}");
+                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 300;
+                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 40;
                     break;
                 case 3502:
                     GigaStationsPlugin.logger.LogInfo($"\nUnlocked Logistic carrier capacity Level {techitemLevel}\nSetting Carrier Capacity Multipliers from settings...");
-                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacity} = {200 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 35 * {GigaStationsPlugin.droneCapacity} = {35 * GigaStationsPlugin.droneCapacity}");
-                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 200;
-                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 35;
+                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacityMultiplier} = {200 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 35 * {GigaStationsPlugin.droneCapacityMultiplier} = {35 * GigaStationsPlugin.droneCapacityMultiplier}");
+                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 200;
+                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 35;
                     break;
                 case 3501:
                     GigaStationsPlugin.logger.LogInfo($"\nUnlocked Logistic carrier capacity Level {techitemLevel}\nSetting Carrier Capacity Multipliers from settings...");
-                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacity} = {200 * GigaStationsPlugin.vesselCapacity}\nSetting Drones Capacity: 30 * {GigaStationsPlugin.droneCapacity} = {30 * GigaStationsPlugin.droneCapacity}");
-                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacity * 200;
-                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacity * 30;
+                    GigaStationsPlugin.logger.LogInfo($"\nLevel {techitemLevel}\nSetting Vessels Capacity: 200 * {GigaStationsPlugin.vesselCapacityMultiplier} = {200 * GigaStationsPlugin.vesselCapacityMultiplier}\nSetting Drones Capacity: 30 * {GigaStationsPlugin.droneCapacityMultiplier} = {30 * GigaStationsPlugin.droneCapacityMultiplier}");
+                    GameMain.history.logisticShipCarries = GigaStationsPlugin.vesselCapacityMultiplier * 200;
+                    GameMain.history.logisticDroneCarries = GigaStationsPlugin.droneCapacityMultiplier * 30;
                     break;
                 default:
                     break;

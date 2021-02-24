@@ -29,7 +29,7 @@ namespace GigaStations
 
         public const string ModGuid = "com.Taki7o7.GigaStations_v2";
         public const string ModName = "GigaStations_v2";
-        public const string ModVer = "2.0.1";
+        public const string ModVer = "2.0.2";
 
 
 

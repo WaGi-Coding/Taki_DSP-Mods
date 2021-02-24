@@ -47,7 +47,7 @@ namespace GigaStations
         public static int plsMaxStorage { get; set; } = 15000; //Vanilla 5000
         public static int plsMaxDrones { get; set; } = 150; //Vanilla 50 (limit from 50-150)
         public static long plsMaxAcuMJ { get; set; } = 500; //Vanilla 180 MJ = * 1 000 000
-        public static int plsMaxSlots { get; set; } = 12; //Vanilla 5 (limited to from 5-12)
+        public static int plsMaxSlots { get; set; } = 12; //Vanilla 3 (limited to from 3-12)
 
         //Collector
         public static int colMaxStorage { get; set; } = 15000; //Vanilla 5000 

@@ -31,32 +31,42 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Users\Taki\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp.refstub">
-      <HintPath>..\Libs\stubs\Assembly-CSharp.refstub.dll</HintPath>
+      <HintPath>..\Libs\Assembly-CSharp.refstub.dll</HintPath>
     </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\BepInEx.dll</HintPath>
+    <Reference Include="BepInEx, Version=5.4.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Users\Taki\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="LDBTool">
       <HintPath>..\..\..\Users\Taki\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\plugins\xiaoye97-LDBTool\LDBTool.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\Mono.Cecil.dll</HintPath>
+    <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Users\Taki\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\Mono.Cecil.Mdb.dll</HintPath>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Users\Taki\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\Mono.Cecil.Mdb.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\Mono.Cecil.Pdb.dll</HintPath>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Users\Taki\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\Mono.Cecil.Pdb.dll</HintPath>
     </Reference>
-    <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\..\..\Users\Taki\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="MonoMod.Utils">
-      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\MonoMod.Utils.dll</HintPath>
+    <Reference Include="MonoMod.RuntimeDetour, Version=20.11.26.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Users\Taki\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils, Version=20.11.26.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Users\Taki\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\mods\profiles\Taki\BepInEx\core\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,19 +79,19 @@
       <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.refstub">
-      <HintPath>..\Libs\stubs\UnityEngine.refstub.dll</HintPath>
+      <HintPath>..\Libs\UnityEngine.refstub.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UIModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -62,12 +62,12 @@ namespace EnergyManager_Generators
 
         // ADVANCED MODE
         public static string generatorValues { get; set; } = string.Empty;
+        public static Dictionary<int, long> GenModDict;
 
         //public static bool loadedOnce = false;
 
         public static BepInEx.Configuration.ConfigFile myCfg;
 
-        public static Dictionary<int, long> GenModDict;
         
 
         public void Awake()
@@ -274,6 +274,7 @@ namespace EnergyManager_Generators
 
                                 if (desc.isPowerGen)
                                 {
+                                    
                                     desc.genEnergyPerTick = Convert.ToInt64(Math.Round(valueToEdit * kwMultiplier));
                                     EnergyManager_Generators_Plugin.logger.LogMessage("Successfully Edited: " + item + " --- Continuing");
                                     EnergyManager_Generators_Plugin.GenModDict.Add(idToEdit, valueToEdit);

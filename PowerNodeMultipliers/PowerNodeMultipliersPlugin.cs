@@ -4,7 +4,7 @@ using BepInEx;
 using HarmonyLib;
 using MonoMod.RuntimeDetour;
 using MonoMod.Cil;
-using Mono.Cecil.Cil;
+
 using UnityEngine;
 using System.Security;
 using System.Security.Permissions;
@@ -12,6 +12,9 @@ using System.IO;
 using System.Collections.Generic;
 //using xiaoye97;
 using BepInEx.Logging;
+using System.Reflection.Emit;
+using System.Linq;
+using BepInEx.Configuration;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -25,7 +28,7 @@ namespace PowerNodeMultipliers
 
         public const string ModGuid = "com.Taki7o7.PowerNodeMultipliers";
         public const string ModName = "PowerNodeMultipliers";
-        public const string ModVer = "1.0.1";
+        public const string ModVer = "1.0.4";
 
         public static string generatorValues { get; set; } = string.Empty;
 
@@ -43,7 +46,7 @@ namespace PowerNodeMultipliers
 
         // Wireless Power Station
         public static float WirelessConn { get; set; } = 3.0f;
-        public static float WirelessCover { get; set; } = 2.0f;
+        public static int WirelessCover { get; set; } = 2;
 
 
         // Satellite Substation
@@ -61,11 +64,11 @@ namespace PowerNodeMultipliers
 
             // Wireless Power Station
             WirelessConn = Config.Bind<float>("-| 2 Wireless Power Station", "Connection Distance Multiplier", 3.0f, "Multiplies the Connection Distance of the Wireless Power Station").Value;
-            WirelessCover = Config.Bind<float>("-| 2 Wireless Power Station", "Cover Radius Multiplier", 2.0f, "Multiplies the Cover Radius of the Wireless Power Station").Value;
+            WirelessCover = Config.Bind<int>("-| 2 Wireless Power Station", "Cover Radius Multiplier", 2, new ConfigDescription("Multiplies the Cover Radius of the Wireless Power Station", new AcceptableValueRange<int>(1, 4))).Value;
 
             // Satellite Substation
             SatConn = Config.Bind<float>("-| 3 Satellite Substation", "Connection Distance Multiplier", 1.5f, "Multiplies the Connection Distance of the Satellite Substation").Value;
-            SatCover = Config.Bind<float>("-| 3 Satellite Substation", "Cover Radius Multiplier", 1.5f, "Multiplies the Cover Radius of the Satellite Substation").Value;
+            SatCover = Config.Bind<float>("-| 3 Satellite Substation", "Cover Radius Multiplier", 1.5f, new ConfigDescription("Multiplies the Cover Radius of the Satellite Substation", new AcceptableValueRange<float>(1f, 150f))).Value;
 
 
             var harmony = new Harmony(ModGuid);
@@ -82,6 +85,65 @@ namespace PowerNodeMultipliers
     [HarmonyPatch]
     public class PowerNodeMultipliersPatch
     {
+
+        // [HarmonyTranspiler]
+        // [HarmonyPatch(typeof(PowerSystem), "GameTick")]
+        // static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        // {
+        //     CodeMatcher matcher = new CodeMatcher(instructions)
+        //.MatchForward(true,
+        //    new CodeMatch(OpCodes.Ldloc_S),
+        //    new CodeMatch(OpCodes.Ldelema),
+        //    new CodeMatch(i =>
+        //        i.opcode == OpCodes.Ldflda && ((FieldInfo)i.operand).Name == nameof(PowerNodeComponent.powerPoint)),
+        //    new CodeMatch(i =>
+        //        i.opcode == OpCodes.Ldfld && ((FieldInfo)i.operand).Name == nameof(Vector3.x)),
+        //    new CodeMatch(i =>
+        //        i.opcode == OpCodes.Ldc_R4 && (Convert.ToSingle(i.operand)) == 0.988f),
+        //    new CodeMatch(OpCodes.Mul),
+        //    new CodeMatch(OpCodes.Ldloca_S),
+        //    new CodeMatch(i =>
+        //    i.opcode == OpCodes.Ldfld && ((FieldInfo)i.operand).Name == nameof(Vector3.x)),
+        //    new CodeMatch(OpCodes.Sub),
+        //    new CodeMatch(OpCodes.Stloc_S));
+
+        //     float cur = Convert.ToSingle(matcher.Operand);
+
+        //     matcher.SetOperandAndAdvance((float)(cur / (1.67f * PowerNodeMultipliersPlugin.WirelessCover)));
+
+        //     return matcher.InstructionEnumeration();
+        // }
+
+        [HarmonyTranspiler]
+        [HarmonyPatch(typeof(PowerSystem), "GameTick")]
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var code = new List<CodeInstruction>(instructions);
+
+            for (int i = 0; i < code.Count; i++)
+            {
+
+                //if (code[i].operand is FieldInfo field && field.Name == nameof(PowerNodeComponent.coverRadius))
+                //{
+                //    curCover = (code[i].operand is Single ? Convert.ToSingle(code[i].operand) : 6.5f);
+                //    PowerNodeMultipliersPlugin.logger.LogWarning(code[i].operand.ToString());
+                //    PowerNodeMultipliersPlugin.logger.LogWarning("curCover saved");
+                //}
+                if (code[i].LoadsConstant(15f))
+                {
+                    code[i].operand = 26.5f;
+                    PowerNodeMultipliersPlugin.logger.LogMessage("(Replaced 15f with 26.5f)");
+                }
+                if (code[i].LoadsConstant(64.05))
+                {
+                    code[i].operand = (PowerNodeMultipliersPlugin.WirelessCover == 4 ? 700.0 : PowerNodeMultipliersPlugin.WirelessCover == 3 ? 400.0 : PowerNodeMultipliersPlugin.WirelessCover == 2 ? 180.0 : 64.05);
+                    //code[i].operand = 6.405 * PowerNodeMultipliersPlugin.WirelessCover * (PowerNodeMultipliersPlugin.WirelessCover > 1f ? PowerNodeMultipliersPlugin.WirelessCover - 1 : 1) * 9.85f;
+                    PowerNodeMultipliersPlugin.logger.LogMessage($"(Replaced 64.05 with {(PowerNodeMultipliersPlugin.WirelessCover == 4 ? 760.0 : PowerNodeMultipliersPlugin.WirelessCover == 3 ? 400.0 : PowerNodeMultipliersPlugin.WirelessCover == 2 ? 150.0 : 64.05)})");
+                }
+            }
+            return code.AsEnumerable();
+        }
+
         static bool alreadyInitialized = false;
 
         [HarmonyPostfix]
@@ -108,14 +170,85 @@ namespace PowerNodeMultipliers
         }
 
 
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(PowerSystem), "NewNodeComponent")]
-        public static bool OnNodeAdded(PowerSystem __instance, ref int entityId, ref float conn, ref float cover)
-        {
-            PowerNodeMultipliersPlugin.logger.LogInfo($"### ORIGINAL Tesla Tower: Connection-Distance = {conn} | Cover-Radius = {cover}");
-            //conn *= 2;
-            //cover *= 2;
-            return true;
-        }
+
+        //[HarmonyPrefix]
+        //[HarmonyPatch(typeof(PowerNodeComponent), "Import")]
+        //public static bool ImportPre(PowerNodeComponent __instance, ref BinaryReader r)
+        //{
+        //    r.ReadInt32();
+        //    __instance.id = r.ReadInt32();
+        //    __instance.entityId = r.ReadInt32();
+        //    __instance.networkId = r.ReadInt32();
+        //    __instance.isCharger = r.ReadBoolean();
+        //    __instance.workEnergyPerTick = r.ReadInt32();
+        //    __instance.idleEnergyPerTick = r.ReadInt32();
+        //    __instance.requiredEnergy = r.ReadInt32();
+        //    __instance.powerPoint.x = r.ReadSingle();
+        //    __instance.powerPoint.y = r.ReadSingle();
+        //    __instance.powerPoint.z = r.ReadSingle();
+        //    __instance.connectDistance = r.ReadSingle();
+        //    __instance.coverRadius = r.ReadSingle();
+
+        //    //if (__instance.isCharger && __instance.idleEnergyPerTick == 1500) // Wireless Charging Station
+        //    //{
+        //    //    __instance.coverRadius = 6.5f * PowerNodeMultipliersPlugin.WirelessCover;
+        //    //    //__instance.connectDistance = 45.5f * PowerNodeMultipliersPlugin.WirelessConn;
+
+        //    //    //__instance.coverRadius = 6.5f;
+        //    //    //__instance.connectDistance = 45.5f;
+        //    //}
+        //    //if (__instance.isCharger && __instance.idleEnergyPerTick == 6000) // Orbital Substation
+        //    //{
+        //    //    __instance.coverRadius = 26.5f * PowerNodeMultipliersPlugin.SatCover;
+        //    //    //__instance.connectDistance = 53.5f * PowerNodeMultipliersPlugin.SatConn;
+        //    //}
+        //    //if (!__instance.isCharger && __instance.idleEnergyPerTick == 0) // Tesla Tower
+        //    //{
+        //    //    __instance.coverRadius = 10.5f * PowerNodeMultipliersPlugin.TeslaTowerCover;
+        //    //    //__instance.connectDistance = 22.5f * PowerNodeMultipliersPlugin.TeslaTowerConn;
+        //    //}
+
+
+        //    return false;
+        //}
+
+        //[HarmonyPostfix]
+        //[HarmonyPatch(typeof(PowerNodeComponent), "Import")]
+        //public static void PowerNodeImportPostfix(PowerNodeComponent __instance, ref BinaryReader r)
+        //{
+
+        //    PowerNetwork x = new PowerNetwork();
+            
+
+        //    Debug.LogError(__instance.powerPoint.y);
+        //    if (__instance.isCharger && __instance.idleEnergyPerTick == 1500) // Wireless Charging Station
+        //    {
+        //        __instance.coverRadius = 6.5f * PowerNodeMultipliersPlugin.WirelessCover;
+        //        __instance.connectDistance = 45.5f * PowerNodeMultipliersPlugin.WirelessConn;
+                
+        //        //__instance.coverRadius = 6.5f;
+        //        //__instance.connectDistance = 45.5f;
+        //    }
+        //    if (__instance.isCharger && __instance.idleEnergyPerTick == 6000) // Orbital Substation
+        //    {
+        //        __instance.coverRadius = 26.5f * PowerNodeMultipliersPlugin.SatCover;
+        //        __instance.connectDistance = 53.5f * PowerNodeMultipliersPlugin.SatConn;
+        //    }
+        //    if (!__instance.isCharger && __instance.idleEnergyPerTick == 0) // Tesla Tower
+        //    {
+        //        __instance.coverRadius = 10.5f * PowerNodeMultipliersPlugin.TeslaTowerCover;
+        //        __instance.connectDistance = 22.5f * PowerNodeMultipliersPlugin.TeslaTowerConn;
+        //    }
+        //}
+
+        //[HarmonyPrefix]
+        //[HarmonyPatch(typeof(PowerSystem), "NewNodeComponent")]
+        //public static bool OnNodeAdded(PowerSystem __instance, ref int entityId, ref float conn, ref float cover)
+        //{
+        //    //PowerNodeMultipliersPlugin.logger.LogInfo($"### ORIGINAL Tesla Tower: Connection-Distance = {conn} | Cover-Radius = {cover}");
+        //    //conn *= 2;
+        //    //cover *= 2;
+        //    return true;
+        //}
     }
 }

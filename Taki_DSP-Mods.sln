@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoveEarlyAccessAndSteamNa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GigaStations", "GigaStations\GigaStations.csproj", "{B15B45C9-E158-4213-B225-A4DE1F905A76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackSizeEditor", "StackSizeEditor\StackSizeEditor.csproj", "{AF026C50-133C-4AF1-A249-259F3C62F9C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{B15B45C9-E158-4213-B225-A4DE1F905A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B15B45C9-E158-4213-B225-A4DE1F905A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B15B45C9-E158-4213-B225-A4DE1F905A76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF026C50-133C-4AF1-A249-259F3C62F9C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF026C50-133C-4AF1-A249-259F3C62F9C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF026C50-133C-4AF1-A249-259F3C62F9C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF026C50-133C-4AF1-A249-259F3C62F9C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

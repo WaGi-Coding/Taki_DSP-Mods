@@ -16,6 +16,7 @@ using System.Text;
 using UnityEngine.EventSystems;
 using BepInEx.Configuration;
 using xiaoye97;
+using UnityEditor;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -29,7 +30,7 @@ namespace GigaStations
 
         public const string ModGuid = "com.Taki7o7.GigaStations_v2";
         public const string ModName = "GigaStations_v2";
-        public const string ModVer = "2.0.4";
+        public const string ModVer = "2.0.6";
 
 
 
@@ -150,6 +151,21 @@ namespace GigaStations
             
             Giga_PLS.prefabDesc.workEnergyPerTick = 3333334;
             Giga_PLS.prefabDesc.modelIndex = Giga_PLS.ModelIndex;
+
+
+            
+
+
+            
+            //foreach (var item in Giga_PLS.prefabDesc.prefab.GetComponentsInChildren<Renderer>())
+            //{
+            //    Debug.LogError($"R: {item.name}");
+            //}
+            //foreach (var item in Giga_PLS.prefabDesc.prefab.GetComponentsInChildren<Material>())
+            //{
+            //    Debug.LogError($"Mat: {item.name}");
+            //}
+
             Giga_PLS.prefabDesc.stationMaxItemCount = GigaStationsPlugin.plsMaxStorage;
             Giga_PLS.prefabDesc.stationMaxItemKinds = GigaStationsPlugin.plsMaxSlots;
             Giga_PLS.prefabDesc.stationMaxDroneCount = GigaStationsPlugin.plsMaxDrones;
@@ -166,9 +182,11 @@ namespace GigaStations
             LDBTool.PostAddProto(ProtoType.Recipe, RecipeGiga_PLS);
             LDBTool.PostAddProto(ProtoType.Item, Giga_PLS);
 
-            LDBTool.SetBuildBar(6, 4, 2110);
+            LDBTool.SetBuildBar(6, 5, 2110);
 
         }
+
+
 
         void AddGigaILS()
         {
@@ -207,6 +225,31 @@ namespace GigaStations
             Giga_ILS.prefabDesc = oriItem.prefabDesc.Copy();
             Giga_ILS.prefabDesc.workEnergyPerTick = 3333334;
             Giga_ILS.prefabDesc.modelIndex = Giga_ILS.ModelIndex;
+
+
+            //Configs inst = Traverse.Create(typeof(Configs)).Field("instance").GetValue<Configs>();
+            //var builtin = inst.m_builtin;
+            //List<Material> mats = new List<Material>(builtin.);
+
+
+            //foreach (var item in Giga_ILS.prefabDesc.prefab.GetComponentsInChildren<MeshRenderer>())
+            //{
+
+
+            //    item.material.SetColor("_EmissionColor", new Color(0f, 10f, 0f, 1f) * 10f);
+            //    //Debug.LogError($"MN: {item.material.}");
+            //    //Debug.LogError($"MN: {item.material.name}");
+            //    //Debug.LogError($"Get Texts...");
+            //    //foreach (var tpn in item.material.GetTexturePropertyNames())
+            //    //{
+            //    //    Debug.LogError($"text: {item}");
+            //    //}
+
+            //    //Debug.LogError($"MTN: {item.material.mainTexture.name}");
+
+            //}
+
+
             Giga_ILS.prefabDesc.stationMaxItemCount = GigaStationsPlugin.ilsMaxStorage;
             Giga_ILS.prefabDesc.stationMaxItemKinds = GigaStationsPlugin.ilsMaxSlots;
             Giga_ILS.prefabDesc.stationMaxDroneCount = GigaStationsPlugin.ilsMaxDrones;
@@ -223,7 +266,7 @@ namespace GigaStations
             LDBTool.PostAddProto(ProtoType.Recipe, RecipeGiga_ILS);
             LDBTool.PostAddProto(ProtoType.Item, Giga_ILS);
 
-            LDBTool.SetBuildBar(6, 5, 2111);
+            LDBTool.SetBuildBar(6, 6, 2111);
 
         }
 
@@ -263,8 +306,12 @@ namespace GigaStations
             Giga_Collector.makes = new List<RecipeProto>();
             Giga_Collector.prefabDesc = oriItem.prefabDesc.Copy();
             Giga_Collector.prefabDesc.modelIndex = Giga_Collector.ModelIndex;
-            Giga_Collector.prefabDesc.stationMaxItemCount = GigaStationsPlugin.ilsMaxStorage;
+            Giga_Collector.prefabDesc.stationMaxItemCount = GigaStationsPlugin.colMaxStorage;
             Giga_Collector.prefabDesc.stationCollectSpeed = oriItem.prefabDesc.stationCollectSpeed * GigaStationsPlugin.colSpeedMultiplier;
+
+
+
+            Giga_Collector.prefabDesc.workEnergyPerTick /= oriItem.prefabDesc.workEnergyPerTick / GigaStationsPlugin.colSpeedMultiplier >= 0 ? GigaStationsPlugin.colSpeedMultiplier : oriItem.prefabDesc.workEnergyPerTick; //??yes or no??
             // Set MaxWarpers in station init!!!!!
 
 
@@ -276,7 +323,7 @@ namespace GigaStations
             LDBTool.PostAddProto(ProtoType.Recipe, RecipeGiga_Collector);
             LDBTool.PostAddProto(ProtoType.Item, Giga_Collector);
 
-            LDBTool.SetBuildBar(6, 6, 2112);
+            LDBTool.SetBuildBar(6, 7, 2112);
 
         }
 
@@ -375,15 +422,15 @@ namespace GigaStations
         private static void History_onTechUnlocked(int techitemID, int techitemLevel)
         {
             /*
-                lvl 0	+d:  0	+v:   0	= d:  25 v:  200
-                lvl 1	+d:  5	+v:   0	= d:  30 v:  200
-                lvl 2	+d:  5	+v:   0	= d:  35 v:  200
-                lvl 3	+d:  5	+v: 100	= d:  40 v:  300
-                lvl 4	+d: 10	+v: 100 = d:  50 v:  400
-                lvl 5	+d: 10	+v: 100 = d:  60 v:  500
-                lvl 6	+d: 10	+v: 100 = d:  70 v:  600
-                lvl 7	+d: 10	+v: 200 = d:  80 v:  800
-                lvl 8	+d: 20	+v: 200 = d: 100 v: 1000
+lvl 0	+d:  0	+v:   0	= d:  25 v:  200
+lvl 1	+d:  5	+v:   0	= d:  30 v:  200
+lvl 2	+d:  5	+v:   0	= d:  35 v:  200
+lvl 3	+d:  5	+v: 100	= d:  40 v:  300
+lvl 4	+d: 10	+v: 100 = d:  50 v:  400
+lvl 5	+d: 10	+v: 100 = d:  60 v:  500
+lvl 6	+d: 10	+v: 100 = d:  70 v:  600
+lvl 7	+d: 10	+v: 200 = d:  80 v:  800
+lvl 8	+d: 20	+v: 200 = d: 100 v: 1000
             */
 
             

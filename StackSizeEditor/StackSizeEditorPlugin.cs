@@ -100,7 +100,7 @@ namespace StackSizeEditor
                 }
             }
             string count = (StackSizeEditorPlugin.StackModDict != null && StackSizeEditorPlugin.StackModDict.Count > 0) ? StackSizeEditorPlugin.StackModDict.Count.ToString() : "0";
-            StackSizeEditorPlugin.logger.LogMessage($"============ Parsing END --- Edited {count} Item/s ============");
+            StackSizeEditorPlugin.logger.LogMessage($"============ Parsing END --- Parsed {count} Item/s ============");
             #endregion
 
 
@@ -120,8 +120,8 @@ namespace StackSizeEditor
         [HarmonyPatch(typeof(StorageComponent), "LoadStatic")]
         public static bool MyLoadStatic(StorageComponent __instance)
         {
-            bool flag = !StorageComponent.staticLoaded;
-            if (flag)
+            Debug.LogError("LoadStatic!!!!###############");
+            if (!StorageComponent.staticLoaded)
             {
                 StorageComponent.itemIsFuel = new bool[12000];
                 StorageComponent.itemStackCount = new int[12000];
@@ -150,41 +150,57 @@ namespace StackSizeEditor
 
         static bool alreadyInitialized = false;
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(LDBTool), "VFPreloadPostPatch")]
-        public static void LDBVFPreloadPostPatchPostfix()
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(LDBTool), "PreAddProto")]
+        public static bool PreAddProtoPrefix(ref ProtoType protoType, ref Proto proto)
         {
-            if (!alreadyInitialized) // Don't do when loading back into main menu
+            if (proto is ItemProto)
             {
-                //StackSizeEditorPlugin.StackModDict = new Dictionary<int, int>();
-
-                foreach (var item in StackSizeEditorPlugin.StackModDict)
+                Debug.LogWarning("IsItemProto");
+                if (StackSizeEditorPlugin.StackModDict.ContainsKey((proto as ItemProto).ID))
                 {
-                    if (LDB.items.Select(item.Key) == null)
-                    {
-                        StackSizeEditorPlugin.logger.LogMessage($"Cannot find ID \"{item.Key}\" --- Skipping...");
-                        continue;
-                    }
-                    else
-                    {
-                        if (LDB.items.Select(item.Key).StackSize != item.Value)
-                        {
-                            StackSizeEditorPlugin.logger.LogMessage($"Edited Stacksize of \"{LDB.items.Select(item.Key).Name.Translate()}\" ({item.Key}) to {item.Value} --- Continue!");
-                            StackSizeEditorPlugin.ActualStackModDict.Add(item.Key, item.Value);
-                            continue;
-                        }
-                        else
-                        {
-                            StackSizeEditorPlugin.logger.LogMessage($"Original Stack Size of \"{LDB.items.Select(item.Key).Name.Translate()}\" ({item.Key}) already is {item.Value} --- Skipping...");
-                            continue;
-                        }
-                    }
+                    (proto as ItemProto).StackSize = StackSizeEditorPlugin.StackModDict[(proto as ItemProto).ID];
+                    Debug.LogWarning("########## Edited Stacksize!");
                 }
-                
-
-                alreadyInitialized = true;
             }
-
+            return true;
         }
+
+        //[HarmonyPostfix]
+        //[HarmonyPatch(typeof(LDBTool), "VFPreloadPrePatch")]
+        //public static void LDBVFPreloadPostPatchPostfix()
+        //{
+        //    if (!alreadyInitialized) // Don't do when loading back into main menu
+        //    {
+        //        //StackSizeEditorPlugin.StackModDict = new Dictionary<int, int>();
+
+        //        foreach (var item in StackSizeEditorPlugin.StackModDict)
+        //        {
+        //            if (LDB.items.Select(item.Key) == null)
+        //            {
+        //                StackSizeEditorPlugin.logger.LogMessage($"Cannot find ID \"{item.Key}\" --- Skipping...");
+        //                continue;
+        //            }
+        //            else
+        //            {
+        //                if (LDB.items.Select(item.Key).StackSize != item.Value)
+        //                {
+        //                    StackSizeEditorPlugin.logger.LogMessage($"Edited Stacksize of \"{LDB.items.Select(item.Key).Name.Translate()}\" ({item.Key}) to {item.Value} --- Continue!");
+        //                    StackSizeEditorPlugin.ActualStackModDict.Add(item.Key, item.Value);
+        //                    continue;
+        //                }
+        //                else
+        //                {
+        //                    StackSizeEditorPlugin.logger.LogMessage($"Original Stack Size of \"{LDB.items.Select(item.Key).Name.Translate()}\" ({item.Key}) already is {item.Value} --- Skipping...");
+        //                    continue;
+        //                }
+        //            }
+        //        }
+
+
+        //        alreadyInitialized = true;
+        //    }
+
+        //}
     }
 }

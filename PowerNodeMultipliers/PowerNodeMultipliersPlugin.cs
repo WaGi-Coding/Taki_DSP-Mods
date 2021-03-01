@@ -28,7 +28,7 @@ namespace PowerNodeMultipliers
 
         public const string ModGuid = "com.Taki7o7.PowerNodeMultipliers";
         public const string ModName = "PowerNodeMultipliers";
-        public const string ModVer = "1.0.4";
+        public const string ModVer = "1.0.5";
 
         public static string generatorValues { get; set; } = string.Empty;
 
@@ -47,6 +47,7 @@ namespace PowerNodeMultipliers
         // Wireless Power Station
         public static float WirelessConn { get; set; } = 3.0f;
         public static int WirelessCover { get; set; } = 2;
+        public static float WirelessPowerMultiplier { get; set; } = 3.0f;
 
 
         // Satellite Substation
@@ -65,6 +66,7 @@ namespace PowerNodeMultipliers
             // Wireless Power Station
             WirelessConn = Config.Bind<float>("-| 2 Wireless Power Station", "Connection Distance Multiplier", 3.0f, "Multiplies the Connection Distance of the Wireless Power Station").Value;
             WirelessCover = Config.Bind<int>("-| 2 Wireless Power Station", "Cover Radius Multiplier", 2, new ConfigDescription("Multiplies the Cover Radius of the Wireless Power Station", new AcceptableValueRange<int>(1, 4))).Value;
+            WirelessPowerMultiplier = Config.Bind<float>("-| 2 Wireless Power Station", "Charging Power Multiplier", 3.0f, "Multiplies the Maximum Charging Power of Wireless Power Stations").Value;
 
             // Satellite Substation
             SatConn = Config.Bind<float>("-| 3 Satellite Substation", "Connection Distance Multiplier", 1.5f, "Multiplies the Connection Distance of the Satellite Substation").Value;
@@ -159,6 +161,7 @@ namespace PowerNodeMultipliers
                 PowerNodeMultipliersPlugin.logger.LogInfo("### Attemting to edit Wireless Power Station Item");
                 LDB.items.Select(2202).prefabDesc.powerConnectDistance *= PowerNodeMultipliersPlugin.WirelessConn;
                 LDB.items.Select(2202).prefabDesc.powerCoverRadius *= PowerNodeMultipliersPlugin.WirelessCover;
+                LDB.items.Select(2202).prefabDesc.workEnergyPerTick = Convert.ToInt64(LDB.items.Select(2202).prefabDesc.workEnergyPerTick * PowerNodeMultipliersPlugin.WirelessPowerMultiplier);
                 PowerNodeMultipliersPlugin.logger.LogInfo("### Editing Wireless Power Station successful!");
                 PowerNodeMultipliersPlugin.logger.LogInfo("### Attemting to edit Satellite Substation Item");
                 LDB.items.Select(2212).prefabDesc.powerConnectDistance *= PowerNodeMultipliersPlugin.SatConn;

@@ -6,6 +6,7 @@ using MonoMod.RuntimeDetour;
 using MonoMod.Cil;
 
 using UnityEngine;
+
 using System.Security;
 using System.Security.Permissions;
 using System.IO;
@@ -15,6 +16,9 @@ using BepInEx.Logging;
 using System.Reflection.Emit;
 using System.Linq;
 using BepInEx.Configuration;
+using UnityEngine.UI;
+using System.Collections;
+using UnityEngine.EventSystems;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -38,169 +42,220 @@ namespace StackSizeEditor
         public static Dictionary<int, int> StackModDict = new Dictionary<int, int>();
         public static Dictionary<int, int> ActualStackModDict = new Dictionary<int, int>();
 
+        GameObject ScrollViewCanvas;
+        public static GameObject myCanvas;
+        public static Canvas myCanvasMain;
+        public static Canvas myCanvasHeader;
+        public static Text myHeaderText;
 
-        public void Awake()
+        public static Image thumb;
+        public static InputField myInputField;
+
+        void Awake()
         {
-            logger = base.Logger;
-            generalMultiplier = Config.Bind<int>("-| 1 Stack Size Edit", "|1| Stack-Size Multiplier", 1, "Here you can specify a general Stack Size Multiplier.\nAny Custom Edit Entries have priority!").Value;
-            stackSizeValues = Config.Bind<string>("-| 1 Stack Size Edit", "|2| Stack-Size Custom Entries", string.Empty, "Here you can specify the Stack-Size of ItemIDs\nYou can find ItemIDs when hovering over Items, right after their Name.\n\nFormat: {ItemID}:{StackSize}\nSeperate multiple entries by |\nExample: 2210:100|2203:100\nThis would set Artificial Stars and Wind Turbines StackSize to 100\nThis will ignore the general Multiplier!").Value;
-
-
-
-
-            //Parsing
-            #region Parsing
-            List<string> entries = StackSizeEditorPlugin.stackSizeValues.Split('|').ToList();
-            if (string.IsNullOrEmpty(StackSizeEditorPlugin.stackSizeValues) || entries.Count < 1)
-            {
-                logger.LogMessage("Stack Size Configuration is empty! Nothing to Parse! --- Exiting...");
-                return;
-            }
-            logger.LogMessage("============ Begin Parsing StackSizes ============");
-            foreach (string entry in entries)
-            {
-                logger.LogMessage("Trying to make edit: " + entry);
-                try
-                {
-                    string[] setting = entry.Split(':');
-                    if (setting.Length != 2)
-                    {
-                        logger.LogMessage($"Cannot parse entry: {entry} --- Too {(setting.Length < 2 ? "less" : "much")} parameters for specific setting! --- Skipping...");
-                        continue;
-                    }
-
-                    bool intIDSuccess = Int32.TryParse(setting[0], out int idToEdit);
-                    bool longValueSuccess = Int32.TryParse(setting[1], out int valueToEdit);
-
-                    if (intIDSuccess && longValueSuccess)
-                    {
-                        if (!StackModDict.ContainsKey(idToEdit))
-                        {
-                            logger.LogMessage($"Parsed entry: {entry} --- Continue!");
-                            StackModDict.Add(idToEdit, valueToEdit);
-                            continue;
-                        }
-                        else
-                        {
-                            logger.LogMessage($"Cannot parse entry: {entry} --- ID {idToEdit} existing in the List! --- Continue!");
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        logger.LogMessage("Cannot parse entry: " + entry + " --- ID-Parse Success: " + intIDSuccess + " | Value-Parse Success: " + longValueSuccess + " --- Skipping...");
-                        continue;
-                    }
-
-                }
-                catch (Exception)
-                {
-                    StackSizeEditorPlugin.logger.LogMessage("Cannot parse entry: " + entry + " --- Skipping...");
-                    continue;
-                }
-            }
-            string count = (StackSizeEditorPlugin.StackModDict != null && StackSizeEditorPlugin.StackModDict.Count > 0) ? StackSizeEditorPlugin.StackModDict.Count.ToString() : "0";
-            StackSizeEditorPlugin.logger.LogMessage($"============ Parsing END --- Parsed {count} Item/s ============");
-            #endregion
-
-
-
-
             var harmony = new Harmony(ModGuid);
 
             harmony.PatchAll(typeof(StackSizeEditorPatch));
         }
+        ScriptableObject x = new ScriptableObject();
+
+        void Start()
+        {
+            
+            var ab = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("StackSizeEditor.takiui"));
+            ScrollViewCanvas = ab.LoadAsset<GameObject>("myCanvas");
+            
+            if (ScrollViewCanvas == null)
+            {
+                Debug.LogWarning("canvas is null");
+            }
+            else
+            {
+                Debug.LogWarning("canvas is NOT null");
+            }
+            
+            myCanvas = Instantiate<GameObject>(ScrollViewCanvas);
+            //myScrollView.renderMode = RenderMode.ScreenSpaceOverlay;
+            //myScrollView.enabled = true;
+            
+            foreach (var button in myCanvas.GetComponentsInChildren<Button>())
+            {
+                Debug.LogWarning($"Button found: {button.name}");
+                switch (button.name)
+                {
+                    case "Button1":
+                        button.onClick.AddListener(delegate { Clicked(button.name); });
+                        break;
+                    case "Button2":
+                        button.onClick.AddListener(delegate { Clicked(button.name); });
+                        break;
+                    case "ButtonClose":
+                        button.onClick.AddListener(delegate { CloseUI(); });
+                        break;
+                    default:
+                        break;
+                }
+            }
+            foreach (var imageitem in myCanvas.GetComponentsInChildren<Image>())
+            {
+                switch (imageitem.name)
+                {
+                    case "ImageThumbnail":
+                        Debug.LogWarning($"{imageitem.name} found");
+                        thumb = imageitem;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            foreach (var inputField in myCanvas.GetComponentsInChildren<InputField>())
+            {
+                switch (inputField.name)
+                {
+                    case "myInputField":
+                        myInputField = inputField;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            foreach (var textItem in myCanvas.GetComponentsInChildren<Text>())
+            {
+                switch (textItem.name)
+                {
+                    case "HeaderText":
+                        myHeaderText = textItem;
+                        myHeaderText.enabled = false; // init hide error message
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            Debug.LogError("Start Canvas Search");
+            foreach (var canvas in myCanvas.GetComponentsInChildren<Canvas>())
+            {
+                Debug.LogError(canvas.name);
+                switch (canvas.name)
+                {
+                    case "CanvasMain":
+                        Debug.LogWarning("Found CanvasMain!!! ########");
+                        myCanvasMain = canvas;
+                        break;
+                    case "CanvasHeader":
+                        Debug.LogWarning("Found CanvasHeader!!! ########");
+                        myCanvasHeader = canvas;
+                        canvas.gameObject.AddComponent<DragWindow>();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            myCanvas.SetActive(false);
+
+        }
+
+        void CloseUI()
+        {
+            myCanvas.SetActive(false);
+            VFInput.UpdateGameStates();
+        }
+
+
+        Coroutine ErrorMessageRoutine;
+        void Clicked(string BtnName)
+        {
+            Debug.LogWarning($"Button \"{BtnName}\" pressed!");
+
+            bool success = Int32.TryParse(myInputField.text, out int result);
+            ItemProto selectedItem = null;
+            if (success)
+            {
+                selectedItem = LDB.items.Select(result);
+            }
+
+            if (success && selectedItem != null)
+            {
+                thumb.sprite = selectedItem._iconSprite;
+            }
+            else
+            {
+                ErrorMessageRoutine = StartCoroutine(ShowError(2f));
+            }
+
+        }
+
+        IEnumerator ShowError(float delay)
+        {
+            if (ErrorMessageRoutine != null)
+            {
+                StopCoroutine(ErrorMessageRoutine);
+            }
+            myHeaderText.enabled = true;
+            yield return new WaitForSeconds(delay);
+            myHeaderText.enabled = false;
+            ErrorMessageRoutine = null;
+        }
+
+        private void Update()
+        {
+            bool keyDown = Input.GetKeyDown(KeyCode.K);
+            if (keyDown)
+            {
+                Debug.LogWarning($"mainplayer is null? {(GameMain.mainPlayer.mecha == null)}");
+                UIGame uiGame = UIRoot.instance.uiGame;
+                if (VFInput.inFullscreenGUI && !myCanvas.activeSelf)
+                {
+                    return;
+                }
+                if (!myCanvas.activeSelf)
+                {
+                    thumb.sprite = LDB.items.Select(2104)._iconSprite;
+                }
+                myCanvas.SetActive(!myCanvas.activeSelf);
+                VFInput.UpdateGameStates();
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape) && myCanvas.activeSelf)
+            {
+                myCanvas.SetActive(false);
+                VFInput.UpdateGameStates();
+            }
+            
+        }
+
     }
 
     [HarmonyPatch]
     public class StackSizeEditorPatch
     {
 
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(StorageComponent), "LoadStatic")]
-        public static bool MyLoadStatic(StorageComponent __instance)
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(VFInput), "UpdateGameStates")]
+        public static void UpdateGameStatesPostfix()
         {
-            Debug.LogError("LoadStatic!!!!###############");
-            if (!StorageComponent.staticLoaded)
+            UIGame uiGame = UIRoot.instance.uiGame;
+            
+            if ((uiGame.active && (uiGame.techTree.active || uiGame.dysonmap.active || uiGame.starmap.active)))
             {
-                StorageComponent.itemIsFuel = new bool[12000];
-                StorageComponent.itemStackCount = new int[12000];
-                for (int i = 0; i < 12000; i++)
-                {
-                    StorageComponent.itemStackCount[i] = 1000;
-                }
-                ItemProto[] dataArray = LDB.items.dataArray;
-                for (int j = 0; j < dataArray.Length; j++)
-                {
-                    StorageComponent.itemIsFuel[dataArray[j].ID] = (dataArray[j].HeatValue > 0L);
-                    if (!StackSizeEditorPlugin.StackModDict.ContainsKey(dataArray[j].ID))
-                    {
-                        StorageComponent.itemStackCount[dataArray[j].ID] = dataArray[j].StackSize * StackSizeEditorPlugin.generalMultiplier;
-                    }
-                    else
-                    {
-                        StorageComponent.itemStackCount[dataArray[j].ID] = StackSizeEditorPlugin.StackModDict[dataArray[j].ID];
-                    }
-                }
-                StorageComponent.staticLoaded = true;
+                StackSizeEditorPlugin.myCanvas.SetActive(false);
+                return;
             }
-            return false;
+            VFInput.inFullscreenGUI = VFInput.inFullscreenGUI || StackSizeEditorPlugin.myCanvas.activeSelf;
         }
+    }
 
-
-        static bool alreadyInitialized = false;
-
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(LDBTool), "PreAddProto")]
-        public static bool PreAddProtoPrefix(ref ProtoType protoType, ref Proto proto)
+    public class DragWindow : MonoBehaviour, IDragHandler
+    {
+        private RectTransform dragRectTransform = StackSizeEditorPlugin.myCanvasMain.GetComponent<RectTransform>();
+        public void OnDrag(PointerEventData eventData)
         {
-            if (proto is ItemProto)
+            if (dragRectTransform != null)
             {
-                Debug.LogWarning("IsItemProto");
-                if (StackSizeEditorPlugin.StackModDict.ContainsKey((proto as ItemProto).ID))
-                {
-                    (proto as ItemProto).StackSize = StackSizeEditorPlugin.StackModDict[(proto as ItemProto).ID];
-                    Debug.LogWarning("########## Edited Stacksize!");
-                }
+                dragRectTransform.anchoredPosition += eventData.delta;
             }
-            return true;
         }
-
-        //[HarmonyPostfix]
-        //[HarmonyPatch(typeof(LDBTool), "VFPreloadPrePatch")]
-        //public static void LDBVFPreloadPostPatchPostfix()
-        //{
-        //    if (!alreadyInitialized) // Don't do when loading back into main menu
-        //    {
-        //        //StackSizeEditorPlugin.StackModDict = new Dictionary<int, int>();
-
-        //        foreach (var item in StackSizeEditorPlugin.StackModDict)
-        //        {
-        //            if (LDB.items.Select(item.Key) == null)
-        //            {
-        //                StackSizeEditorPlugin.logger.LogMessage($"Cannot find ID \"{item.Key}\" --- Skipping...");
-        //                continue;
-        //            }
-        //            else
-        //            {
-        //                if (LDB.items.Select(item.Key).StackSize != item.Value)
-        //                {
-        //                    StackSizeEditorPlugin.logger.LogMessage($"Edited Stacksize of \"{LDB.items.Select(item.Key).Name.Translate()}\" ({item.Key}) to {item.Value} --- Continue!");
-        //                    StackSizeEditorPlugin.ActualStackModDict.Add(item.Key, item.Value);
-        //                    continue;
-        //                }
-        //                else
-        //                {
-        //                    StackSizeEditorPlugin.logger.LogMessage($"Original Stack Size of \"{LDB.items.Select(item.Key).Name.Translate()}\" ({item.Key}) already is {item.Value} --- Skipping...");
-        //                    continue;
-        //                }
-        //            }
-        //        }
-
-
-        //        alreadyInitialized = true;
-        //    }
-
-        //}
     }
 }

@@ -30,7 +30,7 @@ namespace GigaStations
 
         public const string ModGuid = "com.Taki7o7.GigaStations_v2";
         public const string ModName = "GigaStations_v2";
-        public const string ModVer = "2.0.6";
+        public const string ModVer = "2.0.7";
 
 
 
@@ -657,16 +657,27 @@ lvl 8	+d: 20	+v: 200 = d: 100 v: 1000
         [HarmonyPatch(typeof(StationComponent), "Import")]
         public static IEnumerable<CodeInstruction> StationImportTranspiler(IEnumerable<CodeInstruction> instructions)
         {
+
+            return new CodeMatcher(instructions)
+                .MatchForward(false, // false = move at the start of the match, true = move at the end of the match
+            new CodeMatch(System.Reflection.Emit.OpCodes.Ldarg_0),
+                    new CodeMatch(System.Reflection.Emit.OpCodes.Ldc_I4_6),
+                    new CodeMatch(System.Reflection.Emit.OpCodes.Newarr),
+                    new CodeMatch(i => i.opcode == System.Reflection.Emit.OpCodes.Stfld && ((FieldInfo)i.operand).Name == nameof(StationComponent.needs)))
+                .Advance(1)
+                .SetAndAdvance(System.Reflection.Emit.OpCodes.Ldc_I4, 13)
+                .InstructionEnumeration();
+
             //do for all should not matter
+            //List<CodeInstruction> list = instructions.ToList<CodeInstruction>();
 
-            List<CodeInstruction> list = instructions.ToList<CodeInstruction>();
-            if (list[326].opcode == System.Reflection.Emit.OpCodes.Ldc_I4_6)
-            {
-                list[326].opcode = System.Reflection.Emit.OpCodes.Ldc_I4;
-                list[326].operand = 13;
-            }
+            //if (list[326].opcode == System.Reflection.Emit.OpCodes.Ldc_I4_6)
+            //{
+            //    list[326].opcode = System.Reflection.Emit.OpCodes.Ldc_I4;
+            //    list[326].operand = 13;
+            //}
 
-            return list.AsEnumerable<CodeInstruction>();
+            //return list.AsEnumerable<CodeInstruction>();
         }
 
         //public static int myId = 0;

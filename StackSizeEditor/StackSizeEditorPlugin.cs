@@ -35,7 +35,7 @@ namespace StackSizeEditor
 
         public const string ModGuid = "com.Taki7o7.StackSizeEditor";
         public const string ModName = "StackSizeEditor";
-        public const string ModVer = "1.0.0";
+        public const string ModVer = "1.0.1";
 
         public static BepInEx.Configuration.ConfigFile myCfg;
         //public static ConfigFile CustomStackSizeConfig = new ConfigFile(Paths.ConfigPath + "/StackSizeEditor/StackSizeEditor.cfg", true);
@@ -190,6 +190,10 @@ namespace StackSizeEditor
                 }
             }
 
+            InputField tmpMaxWarpersInputField = myCanvas.transform.FindChildRecur("MaxWarpersInputField").GetComponent<InputField>();
+            myCanvas.transform.FindChildRecur("ButtonSetMaxWarpers").GetComponent<Button>().onClick.AddListener(delegate { SetMaxWarpers(tmpMaxWarpersInputField); });
+            tmpMaxWarpersInputField.text = (StackSizeEditorPlugin.saveData.maxWarpers == 0 ? "20" : StackSizeEditorPlugin.saveData.maxWarpers.ToString());
+
             //foreach (var imageitem in myCanvas.GetComponentsInChildren<Image>())
             //{
             //    switch (imageitem.name)
@@ -270,6 +274,19 @@ namespace StackSizeEditor
 
         }
 
+        void SetMaxWarpers(InputField inputField)
+        {
+            bool suc = Int32.TryParse(inputField.text, out int result);
+            if (suc)
+            {
+                saveData.maxWarpers = result;
+                GameMain.mainPlayer.mecha.warpStorage.SetFilter(0, 1210, result);
+                GameMain.mainPlayer.mecha.warpStorage.Sort(true);
+                SaveSaveData();
+            }
+
+        }
+
         void SortWhenApplyToggleValChanged(bool isOn)
         {
             SortWhenApply.Value = isOn;
@@ -303,6 +320,9 @@ namespace StackSizeEditor
 
             }
             GameMain.mainPlayer.package.Sort(true);
+            GameMain.mainPlayer.mecha.reactorStorage.Sort(true);
+            GameMain.mainPlayer.mecha.warpStorage.Sort(true);
+
             //SORT END
         }
 
@@ -642,6 +662,20 @@ namespace StackSizeEditor
     public class StackSizeEditorPatch
     {
         [HarmonyPostfix]
+        [HarmonyPatch(typeof(Mecha), "Import")]
+        public static void MechaImportPostfix(Mecha __instance, BinaryReader r)
+        {
+            __instance.warpStorage.SetFilter(0, 1210, (StackSizeEditorPlugin.saveData.maxWarpers == 0 ? 20 : StackSizeEditorPlugin.saveData.maxWarpers));
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Mecha), "SetForNewGame")]
+        public static void MechaSetForNewGamePostfix(Mecha __instance)
+        {
+            __instance.warpStorage.SetFilter(0, 1210, (StackSizeEditorPlugin.saveData.maxWarpers == 0 ? 20 : StackSizeEditorPlugin.saveData.maxWarpers));
+        }
+
+        [HarmonyPostfix]
         [HarmonyPatch(typeof(LDBTool), "VFPreloadPostPatch")]
         public static void LDBVFPreloadPostPatchPostfix()
         {
@@ -736,6 +770,7 @@ namespace StackSizeEditor
     public class SaveData
     {
         public Dictionary<int, int> StackSizesDict { get; set; }
+        public int maxWarpers { get; set; }
     }
 
     public class DragWindow : MonoBehaviour, IDragHandler

@@ -60,7 +60,7 @@
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.refstub">
-      <HintPath>..\Libs\stubs\UnityEngine.refstub.dll</HintPath>
+      <HintPath>..\..\..\Users\Taki\Desktop\DSPPlugins-master\Libs\stubs\UnityEngine.refstub.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

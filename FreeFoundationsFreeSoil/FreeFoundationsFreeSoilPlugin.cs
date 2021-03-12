@@ -24,7 +24,7 @@ namespace FreeFoundationsFreeSoil
     {
         public const string ModGuid = "com.Taki7o7.FreeFoundationsFreeSoil";
         public const string ModName = "FreeFoundationsFreeSoil";
-        public const string ModVer = "1.2.2";
+        public const string ModVer = "1.2.3";
 
 		public static bool freeFoundationEnabled { get; private set; } = true;
 		public static bool freeSoilEnabled { get; private set; } = true;
@@ -145,7 +145,7 @@ namespace FreeFoundationsFreeSoil
         {
 
 			CommandState cmd = __instance.controller.cmd;
-			__instance.waitConfirm = false;
+			//__instance.waitConfirm = false;
 			bool flag = false;
 			bool flag2 = false;
 			if (__instance.handPrefabDesc == null)

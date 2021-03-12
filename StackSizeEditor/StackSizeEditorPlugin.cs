@@ -304,7 +304,6 @@ namespace StackSizeEditor
                     {
                         try
                         {
-
                             item.Sort(true);
                         }
                         catch (Exception)
